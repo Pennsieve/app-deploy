@@ -11,25 +11,36 @@ import (
 func main() {
 	log.Println("Running terraform commands ...")
 
+	// init
 	terraformInit := NewExecution(exec.Command("terraform", "init"),
-		"/service",
+		"/service/terraform",
 		nil)
 	if err := terraformInit.Run(); err != nil {
 		log.Println("terraform init error", terraformInit.GetStdErr())
 	}
 	log.Println("terraform init", terraformInit.GetStdOut())
 
-	terraformPlan := NewExecution(exec.Command("terraform", "plan"),
-		"/service",
+	// plan
+	terraformPlan := NewExecution(exec.Command("terraform", "plan", "-out=tfplan"),
+		"/service/terraform",
 		map[string]string{
 			"AWS_ACCESS_KEY_ID":     os.Getenv("AWS_ACCESS_KEY_ID"),
 			"AWS_SECRET_ACCESS_KEY": os.Getenv("AWS_SECRET_ACCESS_KEY"),
 			"AWS_DEFAULT_REGION":    os.Getenv("AWS_DEFAULT_REGION"),
 		})
 	if err := terraformPlan.Run(); err != nil {
-		log.Println("terraform plan error", terraformInit.GetStdErr())
+		log.Println("terraform plan error", terraformPlan.GetStdErr())
 	}
 	log.Println("terraform plan", terraformPlan.GetStdOut())
+
+	// apply
+	terraformApply := NewExecution(exec.Command("terraform", "apply", "tfplan"),
+		"/service/terraform",
+		nil)
+	if err := terraformApply.Run(); err != nil {
+		log.Println("terraform apply error", terraformApply.GetStdErr())
+	}
+	log.Println("terraform apply", terraformApply.GetStdOut())
 
 	log.Println("done")
 }

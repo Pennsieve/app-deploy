@@ -20,11 +20,8 @@ ENV PATH="${PATH}:/usr/local/go/bin"
 RUN rm -f go1.21.0.linux-amd64.tar.gz
 
 COPY . ./
+ADD terraform/ /service/terraform/
 
 RUN go build -o /service/main main.go
-
-# RUN terraform init
-
-# RUN terraform plan
 
 ENTRYPOINT [ "/service/main" ]

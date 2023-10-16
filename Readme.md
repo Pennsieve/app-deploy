@@ -4,8 +4,8 @@ This repo is for the terraform templates for automated application creation.
 
 To build:
 
-docker build --no-cache -t edmore/application-iac .
+docker build --progress=plain --no-cache -t edmore/application-iac .
 
 To run:
 
-docker run edmore/application-iac -help
+docker run -v $(pwd)/terraform:/service/terraform --env-file ./aws.env edmore/application-iac
