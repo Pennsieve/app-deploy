@@ -8,4 +8,8 @@ To build:
 
 To run:
 
-`docker run -v $(pwd)/terraform:/service/terraform --env-file ./aws.env edmore/application-iac`
+`docker run -v $(pwd)/terraform:/service/terraform --env-file ./aws.env edmore/application-iac -h`
+
+Supported commands: plan, apply, destroy
+
+`docker run -v $(pwd)/terraform:/service/terraform --env-file ./aws.env edmore/application-iac -cmd <command>`
