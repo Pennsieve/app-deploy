@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -8,44 +9,65 @@ import (
 	"strings"
 )
 
+var TerraformDirectory = "/service/terraform"
+
 func main() {
-	log.Println("Running terraform commands ...")
+	cmdPtr := flag.String("cmd", "plan", "command to execute")
+	flag.Parse()
 
-	// init
-	terraformInit := NewExecution(exec.Command("terraform", "init"),
-		"/service/terraform",
-		nil)
-	if err := terraformInit.Run(); err != nil {
-		log.Println("terraform init error", terraformInit.GetStdErr())
-	}
-	log.Println("terraform init", terraformInit.GetStdOut())
+	if *cmdPtr == "plan" {
+		log.Println("Running init and plan ...")
+		// init
+		terraformInit := NewExecution(exec.Command("terraform", "init"),
+			TerraformDirectory,
+			nil)
+		if err := terraformInit.Run(); err != nil {
+			log.Println("terraform init error", terraformInit.GetStdErr())
+		}
+		log.Println("terraform init", terraformInit.GetStdOut())
 
-	// plan
-	terraformPlan := NewExecution(exec.Command("terraform", "plan", "-out=tfplan"),
-		"/service/terraform",
-		map[string]string{
-			"AWS_ACCESS_KEY_ID":     os.Getenv("AWS_ACCESS_KEY_ID"),
-			"AWS_SECRET_ACCESS_KEY": os.Getenv("AWS_SECRET_ACCESS_KEY"),
-			"AWS_DEFAULT_REGION":    os.Getenv("AWS_DEFAULT_REGION"),
-		})
-	if err := terraformPlan.Run(); err != nil {
-		log.Println("terraform plan error", terraformPlan.GetStdErr())
+		// plan
+		terraformPlan := NewExecution(exec.Command("terraform", "plan", "-out=tfplan"),
+			TerraformDirectory,
+			map[string]string{
+				"AWS_ACCESS_KEY_ID":     os.Getenv("AWS_ACCESS_KEY_ID"),
+				"AWS_SECRET_ACCESS_KEY": os.Getenv("AWS_SECRET_ACCESS_KEY"),
+				"AWS_DEFAULT_REGION":    os.Getenv("AWS_DEFAULT_REGION"),
+			})
+		if err := terraformPlan.Run(); err != nil {
+			log.Println("terraform plan error", terraformPlan.GetStdErr())
+		}
+		log.Println("terraform plan", terraformPlan.GetStdOut())
 	}
-	log.Println("terraform plan", terraformPlan.GetStdOut())
 
-	// apply
-	terraformApply := NewExecution(exec.Command("terraform", "apply", "tfplan"),
-		"/service/terraform",
-		nil)
-	if err := terraformApply.Run(); err != nil {
-		log.Println("terraform apply error", terraformApply.GetStdErr())
+	if *cmdPtr == "apply" {
+		log.Println("Running apply ...")
+		// apply
+		terraformApply := NewExecution(exec.Command("terraform", "apply", "tfplan"),
+			TerraformDirectory,
+			nil)
+		if err := terraformApply.Run(); err != nil {
+			log.Println("terraform apply error", terraformApply.GetStdErr())
+		}
+		log.Println("terraform apply", terraformApply.GetStdOut())
 	}
-	log.Println("terraform apply", terraformApply.GetStdOut())
+
+	if *cmdPtr == "destroy" {
+		log.Println("Running destroy ...")
+		// apply
+		terraformDestroy := NewExecution(exec.Command("terraform", "apply", "-destroy", "-auto-approve"),
+			TerraformDirectory,
+			nil)
+		if err := terraformDestroy.Run(); err != nil {
+			log.Println("terraform destroy error", terraformDestroy.GetStdErr())
+		}
+		log.Println("terraform destroy", terraformDestroy.GetStdOut())
+	}
 
 	log.Println("done")
 }
 
-type Runner interface {
+type Executioner interface {
 	Run() error
 	GetStdOut() string
 	GetStdErr() string
@@ -57,7 +79,7 @@ type Execution struct {
 	StdErr *strings.Builder
 }
 
-func NewExecution(cmd *exec.Cmd, dir string, envVars map[string]string) Runner {
+func NewExecution(cmd *exec.Cmd, dir string, envVars map[string]string) Executioner {
 	var stdout strings.Builder
 	var stderr strings.Builder
 	cmd.Stdout = &stdout
