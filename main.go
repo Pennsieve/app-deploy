@@ -64,6 +64,17 @@ func main() {
 		log.Println("terraform destroy", terraformDestroy.GetStdOut())
 	}
 
+	if *cmdPtr == "output" {
+		log.Println("Outputting values ...")
+		// apply
+		terraformOutput := NewExecution(exec.Command("terraform", "output"),
+			TerraformDirectory,
+			nil)
+		if err := terraformOutput.Run(); err != nil {
+			log.Println("terraform output error", terraformOutput.GetStdErr())
+		}
+		log.Println("terraform output", terraformOutput.GetStdOut())
+	}
 	log.Println("done")
 }
 

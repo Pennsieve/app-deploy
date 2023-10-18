@@ -2,7 +2,7 @@ import json
 
 def lambda_handler(event, context):
     
-    print("Hello from application gateway lambda")
+    print("Running application-gateway lambda")
 
     return {
         'statusCode': 202,
