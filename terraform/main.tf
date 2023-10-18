@@ -5,7 +5,7 @@ resource "random_uuid" "val" {
 }
 
 resource "aws_s3_bucket" "lambda_bucket" {
-  bucket = random_uuid.val.result
+  bucket = random_uuid.val.id
 }
 
 resource "aws_s3_bucket_ownership_controls" "lambda_bucket" {
@@ -62,7 +62,7 @@ resource "aws_iam_role" "iam_for_lambda" {
 }
 
 resource "aws_lambda_function" "application_gateway" {
-  function_name = "application-gateway-lambda-${random_uuid.val.result}"
+  function_name = "application-gateway-${random_uuid.val.id}"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "application-gateway.lambda_handler" # module is name of python file: application
 
