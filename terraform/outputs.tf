@@ -9,3 +9,9 @@ output "base_url" {
 
   value = aws_apigatewayv2_stage.lambda.invoke_url
 }
+
+output "ecs_cluster_arn" {
+  description = "ECS cluster ARN."
+
+  value = aws_ecs_cluster.pipeline_cluster.arn
+}

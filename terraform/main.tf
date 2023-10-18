@@ -1,5 +1,6 @@
 provider "aws" {}
 
+// #### S3 ####
 // Creates s3 bucket
 resource "random_uuid" "val" {
 }
@@ -22,7 +23,7 @@ resource "aws_s3_bucket_acl" "bucket_acl" {
   acl    = "private"
 }
 
-// Application Gateway Lambda
+// #### Application Gateway Lambda #### 
 // creates an archive and uploads to s3 bucket
 data "archive_file" "application_gateway_lambda" {
   type = "zip"
@@ -41,8 +42,7 @@ resource "aws_s3_object" "application_gateway_lambda" {
   etag = filemd5(data.archive_file.application_gateway_lambda.output_path)
 }
 
-// Lambda function
-// allow lambda to access resources in your AWS account
+// Lambda function - allow lambda to access resources in your AWS account
 data "aws_iam_policy_document" "assume_role" {
   statement {
     effect = "Allow"
@@ -75,7 +75,8 @@ resource "aws_lambda_function" "application_gateway" {
 
   environment {
     variables = {
-      foo = "bar"
+      foo = "bar",
+      CLUSTER_ARN = aws_ecs_cluster.pipeline_cluster.arn
     }
   }
 }
@@ -92,7 +93,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-// API Gateway
+// #### API Gateway  #### 
 resource "aws_apigatewayv2_api" "lambda" {
   name          = "serverless_lambda_gw"
   protocol_type = "HTTP"
@@ -151,4 +152,30 @@ resource "aws_lambda_permission" "api_gw" {
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_apigatewayv2_api.lambda.execution_arn}/*/*"
+}
+
+// #### ECS Cluster  ####
+resource "aws_kms_key" "ecs_cluster" {
+  description             = "ecs_cluster_kms_key"
+  deletion_window_in_days = 7
+}
+
+resource "aws_cloudwatch_log_group" "ecs_cluster" {
+  name = "ecs-cluster-log-${random_uuid.val.id}"
+}
+
+resource "aws_ecs_cluster" "pipeline_cluster" {
+  name = "pipeline-cluster-${random_uuid.val.id}"
+
+  configuration {
+    execute_command_configuration {
+      kms_key_id = aws_kms_key.ecs_cluster.arn
+      logging    = "OVERRIDE"
+
+      log_configuration {
+        cloud_watch_encryption_enabled = true
+        cloud_watch_log_group_name     = aws_cloudwatch_log_group.ecs_cluster.name
+      }
+    }
+  }
 }
