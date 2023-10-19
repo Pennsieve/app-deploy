@@ -42,7 +42,6 @@ func main() {
 
 	if *cmdPtr == "apply" {
 		log.Println("Running apply ...")
-		// apply
 		terraformApply := NewExecution(exec.Command("terraform", "apply", "tfplan"),
 			TerraformDirectory,
 			nil)
@@ -54,7 +53,6 @@ func main() {
 
 	if *cmdPtr == "destroy" {
 		log.Println("Running destroy ...")
-		// apply
 		terraformDestroy := NewExecution(exec.Command("terraform", "apply", "-destroy", "-auto-approve"),
 			TerraformDirectory,
 			nil)
@@ -66,7 +64,6 @@ func main() {
 
 	if *cmdPtr == "output" {
 		log.Println("Outputting values ...")
-		// apply
 		terraformOutput := NewExecution(exec.Command("terraform", "output"),
 			TerraformDirectory,
 			nil)

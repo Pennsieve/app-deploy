@@ -132,10 +132,10 @@ resource "aws_apigatewayv2_integration" "application_gateway" {
   integration_method = "POST"
 }
 
-resource "aws_apigatewayv2_route" "hello_world" {
+resource "aws_apigatewayv2_route" "application_gateway_run" {
   api_id = aws_apigatewayv2_api.lambda.id
 
-  route_key = "POST /integrations"
+  route_key = "POST /run"
   target    = "integrations/${aws_apigatewayv2_integration.application_gateway.id}"
 }
 
