@@ -179,3 +179,93 @@ resource "aws_ecs_cluster" "pipeline_cluster" {
     }
   }
 }
+
+// ### EFS ###
+// EFS filesystem
+resource "aws_efs_file_system" "pipeline" {
+  creation_token = "efs-${random_uuid.val.id}"
+  encrypted = true
+
+  tags = {
+    Name = "efs-${random_uuid.val.id}"
+  }
+}
+
+// mount target(s)
+resource "aws_efs_mount_target" "mnt-1a" {
+  file_system_id = aws_efs_file_system.pipeline.id
+  subnet_id      = var.mnt_a
+}
+resource "aws_efs_mount_target" "mnt-1b" {
+  file_system_id = aws_efs_file_system.pipeline.id
+  subnet_id      = var.mnt_b
+}
+resource "aws_efs_mount_target" "mnt-1c" {
+  file_system_id = aws_efs_file_system.pipeline.id
+  subnet_id      = var.mnt_c
+}
+resource "aws_efs_mount_target" "mnt-1d" {
+  file_system_id = aws_efs_file_system.pipeline.id
+  subnet_id      = var.mnt_d
+}
+resource "aws_efs_mount_target" "mnt-1e" {
+  file_system_id = aws_efs_file_system.pipeline.id
+  subnet_id      = var.mnt_e
+}
+resource "aws_efs_mount_target" "mnt-1f" {
+  file_system_id = aws_efs_file_system.pipeline.id
+  subnet_id      = var.mnt_f
+}
+
+// ### ECS Task Definition ###
+// ECS Task definition
+resource "aws_ecs_task_definition" "pipeline" {
+  family                = "pipeline-${random_uuid.val.id}"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 1024
+  memory                   = 2048
+  task_role_arn      = var.task_role_arn
+  execution_role_arn = var.execution_role_arn
+
+  container_definitions = jsonencode([
+    {
+      name      = "pipeline-${random_uuid.val.id}"
+      image     = var.image_url
+      cpu       = 10
+      memory    = 512
+      essential = true
+      portMappings = [
+        {
+          containerPort = 8081
+          hostPort      = 8081
+        }
+      ]
+      mountPoints = [
+        {
+          sourceVolume = "pipeline-storage-${random_uuid.val.id}"
+          containerPath = "/mnt"
+          readOnly = false
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group = "/ecs/pipeline/${random_uuid.val.id}"
+          awslogs-region = var.region
+          awslogs-stream-prefix = "ecs"
+          awslogs-create-group = "true"
+        }
+      }
+    }
+  ])
+
+  volume {
+    name = "pipeline-storage-${random_uuid.val.id}"
+
+    efs_volume_configuration {
+      file_system_id          = aws_efs_file_system.pipeline.id
+      root_directory          = "/"
+    }
+  }
+}
