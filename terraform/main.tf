@@ -194,7 +194,7 @@ resource "aws_efs_file_system" "pipeline" {
 // mount target(s)
 resource "aws_efs_mount_target" "mnt" {
   file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = var.subnet_ids["${count.index}"]
+  subnet_id      = var.subnet_ids[count.index]
   count = 6
 }
 
