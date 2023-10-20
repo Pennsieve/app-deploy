@@ -10,10 +10,10 @@ output "base_url" {
   value = "${aws_apigatewayv2_stage.lambda.invoke_url}/run"
 }
 
-output "ecs_cluster_arn" {
-  description = "ECS cluster ARN."
+output "ecs_cluster" {
+  description = "ECS cluster"
 
-  value = aws_ecs_cluster.pipeline_cluster.arn
+  value = aws_ecs_cluster.pipeline_cluster
 }
 
 output "fargate_task_definition" {

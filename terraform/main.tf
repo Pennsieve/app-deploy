@@ -75,8 +75,9 @@ resource "aws_lambda_function" "application_gateway" {
 
   environment {
     variables = {
-      foo = "bar",
-      CLUSTER_ARN = aws_ecs_cluster.pipeline_cluster.arn
+      CLUSTER_NAME = aws_ecs_cluster.pipeline_cluster.name
+      TASK_DEFINITION_NAME = aws_ecs_task_definition.pipeline.family
+      CONTAINER_NAME = aws_ecs_task_definition.pipeline.family # currently same as name of task definition
     }
   }
 }
@@ -87,10 +88,51 @@ resource "aws_cloudwatch_log_group" "application_gateway-lambda" {
   retention_in_days = 30
 }
 
-// attach policy to role to allow function to write to amazon cloudwatch
-resource "aws_iam_role_policy_attachment" "lambda_policy" {
+// attach policy to allow lambda to start a ECS task and to write to Cloudwatch
+resource "aws_iam_role_policy_attachment" "lambda_policy_ecs" {
   role       = aws_iam_role.iam_for_lambda.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+  policy_arn = aws_iam_policy.lambda_iam_policy.arn
+}
+
+resource "aws_iam_policy" "lambda_iam_policy" {
+  name   = "lambda-iam-policy-${random_uuid.val.id}"
+  path   = "/"
+  policy = data.aws_iam_policy_document.iam_policy_document.json
+}
+
+data "aws_iam_policy_document" "iam_policy_document" {
+  statement {
+    sid    = "CloudwatchPermissions"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "ECSTaskPermissions"
+    effect = "Allow"
+    actions = [
+      "ecs:DescribeTasks",
+      "ecs:RunTask",
+      "ecs:ListTasks"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "ECSPassRole"
+    effect = "Allow"
+    actions = [
+      "iam:PassRole",
+    ]
+    resources = [
+      "*"
+    ]
+  }
 }
 
 // #### API Gateway  #### 

@@ -7,3 +7,4 @@ terraform/terraform.tfstate
 terraform/.terraform/*
 *.zip
 terraform/variables.tf
+.vscode/settings.json
