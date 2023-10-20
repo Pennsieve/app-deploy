@@ -192,29 +192,10 @@ resource "aws_efs_file_system" "pipeline" {
 }
 
 // mount target(s)
-resource "aws_efs_mount_target" "mnt-1a" {
+resource "aws_efs_mount_target" "mnt" {
   file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = var.mnt_a
-}
-resource "aws_efs_mount_target" "mnt-1b" {
-  file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = var.mnt_b
-}
-resource "aws_efs_mount_target" "mnt-1c" {
-  file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = var.mnt_c
-}
-resource "aws_efs_mount_target" "mnt-1d" {
-  file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = var.mnt_d
-}
-resource "aws_efs_mount_target" "mnt-1e" {
-  file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = var.mnt_e
-}
-resource "aws_efs_mount_target" "mnt-1f" {
-  file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = var.mnt_f
+  subnet_id      = var.subnet_ids["${count.index}"]
+  count = 6
 }
 
 // ### ECS Task Definition ###
