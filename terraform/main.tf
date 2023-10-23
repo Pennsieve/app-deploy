@@ -75,9 +75,12 @@ resource "aws_lambda_function" "application_gateway" {
 
   environment {
     variables = {
+      REGION = var.region
       CLUSTER_NAME = aws_ecs_cluster.pipeline_cluster.name
       TASK_DEFINITION_NAME = aws_ecs_task_definition.pipeline.family
       CONTAINER_NAME = aws_ecs_task_definition.pipeline.family # currently same as name of task definition
+      SUBNET_IDS = "${aws_default_subnet.default_az1a.id},${aws_default_subnet.default_az1b.id},${aws_default_subnet.default_az1c.id},${aws_default_subnet.default_az1d.id},${aws_default_subnet.default_az1e.id},${aws_default_subnet.default_az1f.id}"
+      SECURITY_GROUP_ID = aws_default_security_group.default.id
     }
   }
 }
@@ -233,10 +236,80 @@ resource "aws_efs_file_system" "pipeline" {
   }
 }
 
+// Default VPC and subnet(s)
+resource "aws_default_vpc" "default" {
+  tags = {
+    Name = "Default VPC"
+  }
+}
+
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_default_vpc.default.id
+
+  ingress {
+    protocol  = -1
+    self      = true
+    from_port = 0
+    to_port   = 0
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+resource "aws_default_subnet" "default_az1a" {
+  availability_zone = "us-east-1a"
+
+  tags = {
+    Name = "Default subnet for us-east-1a"
+  }
+}
+
+resource "aws_default_subnet" "default_az1b" {
+  availability_zone = "us-east-1b"
+
+  tags = {
+    Name = "Default subnet for us-east-1b"
+  }
+}
+resource "aws_default_subnet" "default_az1c" {
+  availability_zone = "us-east-1c"
+
+  tags = {
+    Name = "Default subnet for us-east-1c"
+  }
+}
+resource "aws_default_subnet" "default_az1d" {
+  availability_zone = "us-east-1d"
+
+  tags = {
+    Name = "Default subnet for us-east-1d"
+  }
+}
+resource "aws_default_subnet" "default_az1e" {
+  availability_zone = "us-east-1e"
+
+  tags = {
+    Name = "Default subnet for us-east-1e"
+  }
+}
+
+resource "aws_default_subnet" "default_az1f" {
+  availability_zone = "us-east-1f"
+
+  tags = {
+    Name = "Default subnet for us-east-1f"
+  }
+}
+
 // mount target(s)
 resource "aws_efs_mount_target" "mnt" {
   file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = var.subnet_ids[count.index]
+  subnet_id      = split(",", "${aws_default_subnet.default_az1a.id},${aws_default_subnet.default_az1b.id},${aws_default_subnet.default_az1c.id},${aws_default_subnet.default_az1d.id},${aws_default_subnet.default_az1e.id},${aws_default_subnet.default_az1f.id}")[count.index]
+  security_groups = [aws_default_security_group.default.id]
   count = 6
 }
 

@@ -21,3 +21,32 @@ output "fargate_task_definition" {
 
   value = aws_ecs_task_definition.pipeline
 }
+
+output "computed_subnet_ids" {
+  description = "az1"
+
+  value = [aws_default_subnet.default_az1a.id, 
+  aws_default_subnet.default_az1b.id,
+  aws_default_subnet.default_az1c.id,
+  aws_default_subnet.default_az1d.id,
+  aws_default_subnet.default_az1e.id,
+  aws_default_subnet.default_az1f.id]
+}
+
+output "subnet_ids" {
+  description = "subnet ids comma separated string"
+
+  value = split(",", "${aws_default_subnet.default_az1a.id},${aws_default_subnet.default_az1b.id},${aws_default_subnet.default_az1c.id},${aws_default_subnet.default_az1d.id},${aws_default_subnet.default_az1e.id},${aws_default_subnet.default_az1f.id}")
+}
+
+output "subnet_ids_str" {
+  description = "subnet ids comma separated string"
+
+  value = "${aws_default_subnet.default_az1a.id},${aws_default_subnet.default_az1b.id},${aws_default_subnet.default_az1c.id},${aws_default_subnet.default_az1d.id},${aws_default_subnet.default_az1e.id},${aws_default_subnet.default_az1f.id}"
+}
+
+output "default_vpc" {
+  description = "default VPC"
+
+  value = aws_default_vpc.default
+}
