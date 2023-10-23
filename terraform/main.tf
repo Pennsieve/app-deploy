@@ -23,6 +23,44 @@ resource "aws_s3_bucket_acl" "bucket_acl" {
   acl    = "private"
 }
 
+// ### Default VPC and subnet(s) ###
+resource "aws_default_vpc" "default" {
+  tags = {
+    Name = "Default VPC"
+  }
+}
+
+// TODO - create new security group
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_default_vpc.default.id
+
+  ingress {
+    protocol  = -1
+    self      = true
+    from_port = 0
+    to_port   = 0
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+resource "aws_default_subnet" "default_az1" {
+  availability_zone = "us-east-1${var.az[count.index]}"
+
+  tags = {
+    Name = "Default subnet for us-east-1${var.az[count.index]}"
+  }
+  count = 6
+}
+
+locals {
+  subnet_ids = "${aws_default_subnet.default_az1[0].id},${aws_default_subnet.default_az1[1].id},${aws_default_subnet.default_az1[2].id},${aws_default_subnet.default_az1[3].id},${aws_default_subnet.default_az1[4].id},${aws_default_subnet.default_az1[5].id}"
+}
+
 // #### Application Gateway Lambda #### 
 // creates an archive and uploads to s3 bucket
 data "archive_file" "application_gateway_lambda" {
@@ -79,7 +117,7 @@ resource "aws_lambda_function" "application_gateway" {
       CLUSTER_NAME = aws_ecs_cluster.pipeline_cluster.name
       TASK_DEFINITION_NAME = aws_ecs_task_definition.pipeline.family
       CONTAINER_NAME = aws_ecs_task_definition.pipeline.family # currently same as name of task definition
-      SUBNET_IDS = "${aws_default_subnet.default_az1[0].id},${aws_default_subnet.default_az1[1].id},${aws_default_subnet.default_az1[2].id},${aws_default_subnet.default_az1[3].id},${aws_default_subnet.default_az1[4].id},${aws_default_subnet.default_az1[5].id}"
+      SUBNET_IDS = local.subnet_ids
       SECURITY_GROUP_ID = aws_default_security_group.default.id
     }
   }
@@ -236,44 +274,10 @@ resource "aws_efs_file_system" "pipeline" {
   }
 }
 
-// Default VPC and subnet(s)
-resource "aws_default_vpc" "default" {
-  tags = {
-    Name = "Default VPC"
-  }
-}
-
-// TODO - create new security group
-resource "aws_default_security_group" "default" {
-  vpc_id = aws_default_vpc.default.id
-
-  ingress {
-    protocol  = -1
-    self      = true
-    from_port = 0
-    to_port   = 0
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-resource "aws_default_subnet" "default_az1" {
-  availability_zone = "us-east-1${var.az[count.index]}"
-
-  tags = {
-    Name = "Default subnet for us-east-1${var.az[count.index]}"
-  }
-  count = 6
-}
-
 // mount target(s)
 resource "aws_efs_mount_target" "mnt" {
   file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = split(",", "${aws_default_subnet.default_az1[0].id},${aws_default_subnet.default_az1[1].id},${aws_default_subnet.default_az1[2].id},${aws_default_subnet.default_az1[3].id},${aws_default_subnet.default_az1[4].id},${aws_default_subnet.default_az1[5].id}")[count.index]
+  subnet_id      = split(",", local.subnet_ids)[count.index]
   security_groups = [aws_default_security_group.default.id]
   count = 6
 }

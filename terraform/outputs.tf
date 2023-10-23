@@ -24,13 +24,13 @@ output "fargate_task_definition" {
 output "subnet_ids" {
   description = "subnet ids comma separated string"
 
-  value = split(",", "${aws_default_subnet.default_az1[0].id},${aws_default_subnet.default_az1[1].id},${aws_default_subnet.default_az1[2].id},${aws_default_subnet.default_az1[3].id},${aws_default_subnet.default_az1[4].id},${aws_default_subnet.default_az1[5].id}")
+  value = split(",", local.subnet_ids)
 }
 
 output "subnet_ids_str" {
   description = "subnet ids comma separated string"
 
-  value = "${aws_default_subnet.default_az1[0].id},${aws_default_subnet.default_az1[1].id},${aws_default_subnet.default_az1[2].id},${aws_default_subnet.default_az1[3].id},${aws_default_subnet.default_az1[4].id},${aws_default_subnet.default_az1[5].id}"
+  value = local.subnet_ids
 }
 
 output "default_vpc" {
