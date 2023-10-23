@@ -79,7 +79,7 @@ resource "aws_lambda_function" "application_gateway" {
       CLUSTER_NAME = aws_ecs_cluster.pipeline_cluster.name
       TASK_DEFINITION_NAME = aws_ecs_task_definition.pipeline.family
       CONTAINER_NAME = aws_ecs_task_definition.pipeline.family # currently same as name of task definition
-      SUBNET_IDS = "${aws_default_subnet.default_az1a.id},${aws_default_subnet.default_az1b.id},${aws_default_subnet.default_az1c.id},${aws_default_subnet.default_az1d.id},${aws_default_subnet.default_az1e.id},${aws_default_subnet.default_az1f.id}"
+      SUBNET_IDS = "${aws_default_subnet.default_az1[0].id},${aws_default_subnet.default_az1[1].id},${aws_default_subnet.default_az1[2].id},${aws_default_subnet.default_az1[3].id},${aws_default_subnet.default_az1[4].id},${aws_default_subnet.default_az1[5].id}"
       SECURITY_GROUP_ID = aws_default_security_group.default.id
     }
   }
@@ -243,6 +243,7 @@ resource "aws_default_vpc" "default" {
   }
 }
 
+// TODO - create new security group
 resource "aws_default_security_group" "default" {
   vpc_id = aws_default_vpc.default.id
 
@@ -260,55 +261,19 @@ resource "aws_default_security_group" "default" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-resource "aws_default_subnet" "default_az1a" {
-  availability_zone = "us-east-1a"
+resource "aws_default_subnet" "default_az1" {
+  availability_zone = "us-east-1${var.az[count.index]}"
 
   tags = {
-    Name = "Default subnet for us-east-1a"
+    Name = "Default subnet for us-east-1${var.az[count.index]}"
   }
-}
-
-resource "aws_default_subnet" "default_az1b" {
-  availability_zone = "us-east-1b"
-
-  tags = {
-    Name = "Default subnet for us-east-1b"
-  }
-}
-resource "aws_default_subnet" "default_az1c" {
-  availability_zone = "us-east-1c"
-
-  tags = {
-    Name = "Default subnet for us-east-1c"
-  }
-}
-resource "aws_default_subnet" "default_az1d" {
-  availability_zone = "us-east-1d"
-
-  tags = {
-    Name = "Default subnet for us-east-1d"
-  }
-}
-resource "aws_default_subnet" "default_az1e" {
-  availability_zone = "us-east-1e"
-
-  tags = {
-    Name = "Default subnet for us-east-1e"
-  }
-}
-
-resource "aws_default_subnet" "default_az1f" {
-  availability_zone = "us-east-1f"
-
-  tags = {
-    Name = "Default subnet for us-east-1f"
-  }
+  count = 6
 }
 
 // mount target(s)
 resource "aws_efs_mount_target" "mnt" {
   file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = split(",", "${aws_default_subnet.default_az1a.id},${aws_default_subnet.default_az1b.id},${aws_default_subnet.default_az1c.id},${aws_default_subnet.default_az1d.id},${aws_default_subnet.default_az1e.id},${aws_default_subnet.default_az1f.id}")[count.index]
+  subnet_id      = split(",", "${aws_default_subnet.default_az1[0].id},${aws_default_subnet.default_az1[1].id},${aws_default_subnet.default_az1[2].id},${aws_default_subnet.default_az1[3].id},${aws_default_subnet.default_az1[4].id},${aws_default_subnet.default_az1[5].id}")[count.index]
   security_groups = [aws_default_security_group.default.id]
   count = 6
 }
