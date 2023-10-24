@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  
+  pennsive-agent:
+    env_file:
+      - dev.env
+    image: pennsieve-agent
+    container_name: pennsieve-agent
+    build:
+      context: .
+      dockerfile: ./Dockerfile_arm64
+    entrypoint: /root/main

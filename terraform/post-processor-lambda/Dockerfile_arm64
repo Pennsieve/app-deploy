@@ -1,0 +1,22 @@
+FROM pennsieve/pennsieve-agent:1.4.5
+
+RUN apk update && apk upgrade
+
+WORKDIR /root/
+
+# install Go
+RUN wget https://go.dev/dl/go1.21.0.linux-arm64.tar.gz
+
+RUN  rm -rf /usr/local/go && tar -C /usr/local -xzf go1.21.0.linux-arm64.tar.gz
+
+ENV PATH="${PATH}:/usr/local/go/bin"
+
+# cleanup
+RUN rm -f go1.21.0.linux-arm64.tar.gz
+
+COPY . ./
+RUN go build -o /root/main main.go
+
+ENV PATH="${PATH}:/root/"
+
+CMD [ "/root/main"]
