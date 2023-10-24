@@ -38,3 +38,9 @@ output "default_vpc" {
 
   value = aws_default_vpc.default
 }
+
+output "fargate_ecr_repository" {
+  description = "Fargate ECR repository"
+
+  value = data.aws_ecr_repository.fargate_task
+}

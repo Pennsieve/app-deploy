@@ -284,6 +284,10 @@ resource "aws_efs_mount_target" "mnt" {
 
 // ### ECS Task Definition ###
 // ECS Task definition
+data "aws_ecr_repository" "fargate_task" {
+  name = var.fargate_repository
+}
+
 resource "aws_ecs_task_definition" "pipeline" {
   family                = "pipeline-${random_uuid.val.id}"
   requires_compatibilities = ["FARGATE"]
@@ -296,9 +300,9 @@ resource "aws_ecs_task_definition" "pipeline" {
   container_definitions = jsonencode([
     {
       name      = "pipeline-${random_uuid.val.id}"
-      image     = var.image_url
+      image     = data.aws_ecr_repository.fargate_task.repository_url
       cpu       = 10
-      memory    = 512
+      memory    = 2048
       essential = true
       portMappings = [
         {
@@ -334,3 +338,5 @@ resource "aws_ecs_task_definition" "pipeline" {
     }
   }
 }
+
+// ### Post Processor ###

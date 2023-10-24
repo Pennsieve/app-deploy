@@ -37,6 +37,15 @@ def lambda_handler(event, context):
 					        'name': 'INTEGRATION_ID',
 					        'value': '1'
 				        },
+                        {
+					        'name': 'OUT_DIR',
+					        'value': '/mnt/'
+				        },
+                        {
+					        'name': 'INPUT_DIR',
+					        'value': '/service/data/'
+				        },
+                        
 			     ],
 		        },
 	        ],

@@ -20,7 +20,7 @@ func main() {
 	if err := agent.Run(); err != nil {
 		log.Println("pennsieve error", agent.GetStdErr())
 	}
-	log.Println("whoami", agent.GetStdOut())
+	log.Println("agent -> ", agent.GetStdOut())
 
 	log.Println("Running whoami ...")
 	whoami := NewExecution(exec.Command("./pennsieve", "whoami"),
@@ -29,7 +29,7 @@ func main() {
 	if err := whoami.Run(); err != nil {
 		log.Println("whoami error", whoami.GetStdErr())
 	}
-	log.Println("whoami", whoami.GetStdOut())
+	log.Println("whoami ->", whoami.GetStdOut())
 }
 
 type Executioner interface {
