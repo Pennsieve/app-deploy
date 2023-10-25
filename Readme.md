@@ -4,12 +4,12 @@ This repo is for the terraform templates for automated application creation.
 
 To build:
 
-`docker build --progress=plain --no-cache -t edmore/application-iac .`
+`docker-compose build`
 
-To run:
+Help:
 
-`docker run -v $(pwd)/terraform:/service/terraform --env-file ./aws.env edmore/application-iac -h`
+`docker-compose run application-iac -cmd -h`
 
 Supported commands: plan, apply, destroy, output
 
-`docker run -v $(pwd)/terraform:/service/terraform --env-file ./aws.env edmore/application-iac -cmd <command>`
+`docker-compose run application-iac -cmd <command>`
