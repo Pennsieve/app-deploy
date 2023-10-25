@@ -28,3 +28,27 @@ resource "aws_cloudwatch_log_group" "application_gateway-lambda" {
 
   retention_in_days = 30
 }
+
+// Post-processor Lambda
+resource "aws_lambda_function" "post_processor" {
+  function_name = "post-processor-${random_uuid.val.id}"
+  role          = aws_iam_role.iam_for_post_processor_lambda.arn
+
+  image_uri = "${data.aws_ecr_repository.post_processor.repository_url}:demo"
+  package_type = "Image"
+  memory_size = 1024
+
+  environment {
+    variables = {
+      REGION = var.region
+      SUBNET_IDS = local.subnet_ids
+      SECURITY_GROUP_ID = aws_default_security_group.default.id
+    }
+  }
+}
+
+resource "aws_cloudwatch_log_group" "post_processor-lambda" {
+  name = "/aws/lambda/${aws_lambda_function.post_processor.function_name}"
+
+  retention_in_days = 30
+}

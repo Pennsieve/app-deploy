@@ -44,3 +44,9 @@ output "fargate_ecr_repository" {
 
   value = data.aws_ecr_repository.fargate_task
 }
+
+output "post_processor_ecr_repository" {
+  description = "Post Processor ECR repository"
+
+  value = data.aws_ecr_repository.post_processor
+}

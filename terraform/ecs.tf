@@ -25,10 +25,6 @@ resource "aws_ecs_cluster" "pipeline_cluster" {
 }
 
 // ECS Task definition
-data "aws_ecr_repository" "fargate_task" {
-  name = var.fargate_repository
-}
-
 resource "aws_ecs_task_definition" "pipeline" {
   family                = "pipeline-${random_uuid.val.id}"
   requires_compatibilities = ["FARGATE"]

@@ -16,7 +16,8 @@ resource "aws_s3_object" "application_gateway_lambda" {
   etag = filemd5(data.archive_file.application_gateway_lambda.output_path)
 }
 
-data "aws_iam_policy_document" "iam_policy_document" {
+// policy document - gateway lambda
+data "aws_iam_policy_document" "iam_policy_document_gateway" {
   statement {
     sid    = "CloudwatchPermissions"
     effect = "Allow"
@@ -49,4 +50,28 @@ data "aws_iam_policy_document" "iam_policy_document" {
       "*"
     ]
   }
+}
+
+// policy document - gateway lambda
+data "aws_iam_policy_document" "iam_policy_document_post_processor" {
+  statement {
+    sid    = "CloudwatchPermissions"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents"
+    ]
+    resources = ["*"]
+  }
+}
+
+// ECR fargate repository
+data "aws_ecr_repository" "fargate_task" {
+  name = var.fargate_repository
+}
+
+// Post processor fargate repository
+data "aws_ecr_repository" "post_processor" {
+  name = var.post_processor_repository
 }

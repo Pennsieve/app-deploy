@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  application-iac:
+    env_file:
+      - aws.env
+    image: edmore/application-iac
+    volumes:
+      - ./terraform:/service/terraform
+      # - $HOME/.aws:/root/.aws:ro
+    container_name: application-iac
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    entrypoint: /service/main
