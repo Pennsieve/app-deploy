@@ -1,35 +1,64 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
-var CommandRunDirectory = "/root/"
+var CommandRunDirectory = "/service/"
 
-func main() {
+func ServiceHandler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	fmt.Println("Welcome to the Post-Processor")
 
 	log.Println("Starting pennsieve agent ...")
-	agent := NewExecution(exec.Command("./pennsieve", "agent"),
+	envVars := map[string]string{
+		"PENNSIEVE_API_HOST":   os.Getenv("PENNSIEVE_API_HOST"),
+		"PENNSIEVE_API_KEY":    os.Getenv("PENNSIEVE_API_KEY"),
+		"PENNSIEVE_API_SECRET": os.Getenv("PENNSIEVE_API_SECRET"),
+		"HOME":                 os.Getenv("HOME"),
+	}
+
+	ls := NewExecution(exec.Command("ls", "-alh"),
 		CommandRunDirectory,
 		nil)
+	if err := ls.Run(); err != nil {
+		log.Println("ls", ls.GetStdErr())
+	}
+	log.Println("ls -> ", ls.GetStdOut())
+
+	agent := NewExecution(exec.Command("pennsieve", "agent"),
+		CommandRunDirectory,
+		envVars)
 	if err := agent.Run(); err != nil {
 		log.Println("pennsieve error", agent.GetStdErr())
 	}
 	log.Println("agent -> ", agent.GetStdOut())
 
 	log.Println("Running whoami ...")
-	whoami := NewExecution(exec.Command("./pennsieve", "whoami"),
+	whoami := NewExecution(exec.Command("pennsieve", "whoami"),
 		CommandRunDirectory,
-		nil)
+		envVars)
 	if err := whoami.Run(); err != nil {
 		log.Println("whoami error", whoami.GetStdErr())
 	}
 	log.Println("whoami ->", whoami.GetStdOut())
+
+	response := events.APIGatewayV2HTTPResponse{
+		StatusCode: 200,
+		Body:       "ServiceHandler",
+	}
+	return response, nil
+}
+
+func main() {
+	lambda.Start(ServiceHandler)
 }
 
 type Executioner interface {

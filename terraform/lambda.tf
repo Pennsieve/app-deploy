@@ -37,12 +37,17 @@ resource "aws_lambda_function" "post_processor" {
   image_uri = "${data.aws_ecr_repository.post_processor.repository_url}:demo"
   package_type = "Image"
   memory_size = 1024
+  timeout = 900
 
   environment {
     variables = {
       REGION = var.region
       SUBNET_IDS = local.subnet_ids
       SECURITY_GROUP_ID = aws_default_security_group.default.id
+      PENNSIEVE_API_KEY = var.api_key
+      PENNSIEVE_API_SECRET = var.api_secret
+      PENNSIEVE_API_HOST = var.api_host
+      HOME = var.pennsieve_agent_home
     }
   }
 }

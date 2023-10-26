@@ -38,14 +38,9 @@ def lambda_handler(event, context):
 					        'value': '1'
 				        },
                         {
-					        'name': 'OUT_DIR',
+					        'name': 'BASE_DIR',
 					        'value': '/mnt/'
-				        },
-                        {
-					        'name': 'INPUT_DIR',
-					        'value': '/service/data/'
-				        },
-                        
+				        },        
 			     ],
 		        },
 	        ],

@@ -9,5 +9,8 @@ services:
     container_name: pennsieve-agent
     build:
       context: .
-      dockerfile: ./Dockerfile_arm64
-    entrypoint: /root/main
+      dockerfile: ./Dockerfile
+    entrypoint: aws-lambda-rie /service/main
+    restart: always
+    ports:
+      - 9000:8080
