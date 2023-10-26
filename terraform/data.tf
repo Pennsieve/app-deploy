@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "iam_policy_document_gateway" {
   }
 }
 
-// policy document - gateway lambda
+// policy document - post processor lambda
 data "aws_iam_policy_document" "iam_policy_document_post_processor" {
   statement {
     sid    = "CloudwatchPermissions"
@@ -63,6 +63,17 @@ data "aws_iam_policy_document" "iam_policy_document_post_processor" {
       "logs:PutLogEvents"
     ]
     resources = ["*"]
+  }
+
+    statement {
+    sid    = "PassRole"
+    effect = "Allow"
+    actions = [
+      "iam:PassRole",
+    ]
+    resources = [
+      "*"
+    ]
   }
 }
 

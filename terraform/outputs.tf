@@ -13,13 +13,13 @@ output "base_url" {
 output "ecs_cluster" {
   description = "ECS cluster"
 
-  value = aws_ecs_cluster.pipeline_cluster
+  value = aws_ecs_cluster.pipeline_cluster.arn
 }
 
 output "fargate_task_definition" {
   description = "Fargate Task Definition"
 
-  value = aws_ecs_task_definition.pipeline
+  value = aws_ecs_task_definition.pipeline.arn
 }
 output "subnet_ids" {
   description = "subnet ids comma separated string"
@@ -36,17 +36,17 @@ output "subnet_ids_str" {
 output "default_vpc" {
   description = "default VPC"
 
-  value = aws_default_vpc.default
+  value = aws_default_vpc.default.arn
 }
 
 output "fargate_ecr_repository" {
   description = "Fargate ECR repository"
 
-  value = data.aws_ecr_repository.fargate_task
+  value = data.aws_ecr_repository.fargate_task.arn
 }
 
 output "post_processor_ecr_repository" {
   description = "Post Processor ECR repository"
 
-  value = data.aws_ecr_repository.post_processor
+  value = data.aws_ecr_repository.post_processor.arn
 }

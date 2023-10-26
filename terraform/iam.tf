@@ -51,6 +51,11 @@ resource "aws_iam_role" "iam_for_post_processor_lambda" {
 }
 
 // attach policy to allow post-processor lambda to write to Cloudwatch
+resource "aws_iam_role_policy_attachment" "lambda_policy_post_processor" {
+  role       = aws_iam_role.iam_for_post_processor_lambda.name
+  policy_arn = aws_iam_policy.post_processor_lambda_iam_policy.arn
+}
+
 resource "aws_iam_policy" "post_processor_lambda_iam_policy" {
   name   = "post-processor-lambda-iam-policy-${random_uuid.val.id}"
   path   = "/"

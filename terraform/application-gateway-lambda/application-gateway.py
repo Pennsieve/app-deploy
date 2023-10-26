@@ -12,6 +12,8 @@ def lambda_handler(event, context):
     container_name = os.environ['CONTAINER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
     subnet_ids = os.environ['SUBNET_IDS']
+    post_processor_invoke_arn = os.environ['POST_PROCESSOR_INVOKE_ARN']
+    
     
     if cluster_name != "":
         print("running Fargate task")
@@ -40,7 +42,11 @@ def lambda_handler(event, context):
                         {
 					        'name': 'BASE_DIR',
 					        'value': '/mnt/'
-				        },        
+				        },
+                        {
+					        'name': 'POST_PROCESSOR_INVOKE_ARN',
+					        'value': post_processor_invoke_arn
+				        },       
 			     ],
 		        },
 	        ],

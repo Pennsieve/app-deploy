@@ -19,6 +19,7 @@ resource "aws_lambda_function" "application_gateway" {
       CONTAINER_NAME = aws_ecs_task_definition.pipeline.family # currently same as name of task definition
       SUBNET_IDS = local.subnet_ids
       SECURITY_GROUP_ID = aws_default_security_group.default.id
+      POST_PROCESSOR_INVOKE_ARN = aws_lambda_function.post_processor.arn
     }
   }
 }
@@ -42,8 +43,6 @@ resource "aws_lambda_function" "post_processor" {
   environment {
     variables = {
       REGION = var.region
-      SUBNET_IDS = local.subnet_ids
-      SECURITY_GROUP_ID = aws_default_security_group.default.id
       PENNSIEVE_API_KEY = var.api_key
       PENNSIEVE_API_SECRET = var.api_secret
       PENNSIEVE_API_HOST = var.api_host
