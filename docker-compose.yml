@@ -1,14 +1,15 @@
 version: '3.9'
 
 services:
-  application-iac:
+  app-deploy:
     env_file:
       - aws.env
-    image: edmore/application-iac
+    image: pennsieve/app-deploy
     volumes:
       - ./terraform:/service/terraform
+      - ./build:/service/build
       # - $HOME/.aws:/root/.aws:ro
-    container_name: application-iac
+    container_name: app-deploy
     build:
       context: .
       dockerfile: ./Dockerfile

@@ -13,7 +13,20 @@ var TerraformDirectory = "/service/terraform"
 
 func main() {
 	cmdPtr := flag.String("cmd", "plan", "command to execute")
+	repoPtr := flag.String("repo", "", "repository")
 	flag.Parse()
+
+	if *cmdPtr == "build" {
+		buildDir := "/service/build"
+		log.Println("Running build of main application ...")
+
+		build := NewExecution(exec.Command("git", "clone", *repoPtr, "app"),
+			buildDir,
+			nil)
+		if err := build.Run(); err != nil {
+			log.Println("clone error", build.GetStdErr())
+		}
+	}
 
 	if *cmdPtr == "plan" {
 		log.Println("Running init and plan ...")

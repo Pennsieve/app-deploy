@@ -1,0 +1,7 @@
+work
+*.pdf
+.nextflow
+hsperfdata_root
+.nextflow.log*
+work
+libjansi-64.so

@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  
+  cytof-pipeline-fargate-task:
+    env_file:
+      - dev.env
+    image: cytof-qc-pipeline
+    volumes:
+      - $HOME/.aws:/root/.aws:ro
+    container_name: cytof-qc-pipeline
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    entrypoint: /service/main
