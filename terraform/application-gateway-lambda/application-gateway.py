@@ -41,7 +41,7 @@ def lambda_handler(event, context):
 				        },
                         {
 					        'name': 'BASE_DIR',
-					        'value': '/mnt/'
+					        'value': '/mnt/efs'
 				        },
                         {
 					        'name': 'POST_PROCESSOR_INVOKE_ARN',

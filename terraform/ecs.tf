@@ -50,7 +50,7 @@ resource "aws_ecs_task_definition" "pipeline" {
       mountPoints = [
         {
           sourceVolume = "pipeline-storage-${random_uuid.val.id}"
-          containerPath = "/mnt"
+          containerPath = "/mnt/efs"
           readOnly = false
         }
       ]

@@ -40,6 +40,20 @@ resource "aws_lambda_function" "post_processor" {
   memory_size = 1024
   timeout = 900
 
+  file_system_config {
+    # EFS file system access point ARN
+    arn = aws_efs_access_point.access_point_for_lambda.arn
+
+    # Local mount path inside the lambda function. Must start with '/mnt/'.
+    local_mount_path = "/mnt/efs"
+  }
+
+  vpc_config {
+    # Every subnet should be able to reach an EFS mount target in the same Availability Zone. Cross-AZ mounts are not permitted.
+    subnet_ids         = local.subnet_ids_list
+    security_group_ids = [aws_default_security_group.default.id]
+  }
+
   environment {
     variables = {
       REGION = var.region

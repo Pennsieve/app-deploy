@@ -34,4 +34,5 @@ resource "aws_default_subnet" "default_az1" {
 
 locals {
   subnet_ids = "${aws_default_subnet.default_az1[0].id},${aws_default_subnet.default_az1[1].id},${aws_default_subnet.default_az1[2].id},${aws_default_subnet.default_az1[3].id},${aws_default_subnet.default_az1[4].id},${aws_default_subnet.default_az1[5].id}"
+  subnet_ids_list = [aws_default_subnet.default_az1[0].id, aws_default_subnet.default_az1[1].id, aws_default_subnet.default_az1[2].id, aws_default_subnet.default_az1[3].id, aws_default_subnet.default_az1[4].id, aws_default_subnet.default_az1[5].id]
 }
