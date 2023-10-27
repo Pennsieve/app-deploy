@@ -31,8 +31,8 @@ resource "aws_ecs_task_definition" "pipeline" {
   network_mode             = "awsvpc"
   cpu                      = 1024
   memory                   = 2048
-  task_role_arn      = var.task_role_arn
-  execution_role_arn = var.execution_role_arn
+  task_role_arn      = aws_iam_role.task_role_for_ecs_task.arn
+  execution_role_arn = aws_iam_role.execution_role_for_ecs_task.arn
 
   container_definitions = jsonencode([
     {
