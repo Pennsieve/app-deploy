@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "pipeline" {
   container_definitions = jsonencode([
     {
       name      = "pipeline-${random_uuid.val.id}"
-      image     = "${data.aws_ecr_repository.fargate_task.repository_url}:demo2"
+      image     = "${data.aws_ecr_repository.fargate_task.repository_url}:latest"
       cpu       = 10
       memory    = 2048
       essential = true

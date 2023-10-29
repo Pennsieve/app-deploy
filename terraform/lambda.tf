@@ -35,7 +35,7 @@ resource "aws_lambda_function" "post_processor" {
   function_name = "post-processor-${random_uuid.val.id}"
   role          = aws_iam_role.iam_for_post_processor_lambda.arn
 
-  image_uri = "${data.aws_ecr_repository.post_processor.repository_url}:demo"
+  image_uri = "${data.aws_ecr_repository.post_processor.repository_url}:latest"
   package_type = "Image"
   memory_size = 1024
   timeout = 900
