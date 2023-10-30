@@ -27,5 +27,6 @@ RUN apk --no-cache add curl
 RUN curl -Lo aws-lambda-rie https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie \
 && chmod +x aws-lambda-rie && mv aws-lambda-rie /usr/local/bin/aws-lambda-rie
 
+RUN mkdir /mnt/efs
 
 ENTRYPOINT [ "/service/bootstrap" ]

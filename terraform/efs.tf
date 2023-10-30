@@ -21,7 +21,7 @@ resource "aws_efs_access_point" "access_point_for_lambda" {
   file_system_id = aws_efs_file_system.pipeline.id
 
   root_directory {
-    path = "/output"
+    path = "/efs"
     creation_info {
       owner_gid   = 1000
       owner_uid   = 1000
