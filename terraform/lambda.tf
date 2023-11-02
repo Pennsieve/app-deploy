@@ -42,7 +42,7 @@ resource "aws_lambda_function" "post_processor" {
 
   file_system_config {
     # EFS file system access point ARN
-    arn = aws_efs_access_point.access_point_for_lambda.arn
+    arn = aws_efs_access_point.access_point_for_post_lambda.arn
 
     # Local mount path inside the lambda function. Must start with '/mnt/'.
     local_mount_path = "/mnt/efs"

@@ -10,7 +10,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    entrypoint: aws-lambda-rie /service/main
+    entrypoint: aws-lambda-rie /service/bootstrap
     restart: always
     ports:
       - 9000:8080

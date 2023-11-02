@@ -12,7 +12,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-var CommandRunDirectory = "/mnt/efs"
+var CommandRunDirectory = "/service"
 
 func ServiceHandler(ctx context.Context, request events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	fmt.Println("Welcome to the Post-Processor")
