@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "iam_for_lambda" {
-  name               = "iam_for_lambda"
+  name               = "iam_for_lambda-${random_uuid.val.id}"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -46,7 +46,7 @@ data "aws_iam_policy_document" "post_processor_assume_role" {
 }
 
 resource "aws_iam_role" "iam_for_post_processor_lambda" {
-  name               = "iam_for_post_processor_lambda"
+  name               = "iam_for_post_lambda-${random_uuid.val.id}"
   assume_role_policy = data.aws_iam_policy_document.post_processor_assume_role.json
 }
 
@@ -64,13 +64,13 @@ resource "aws_iam_policy" "post_processor_lambda_iam_policy" {
 
 // ECS task IAM role
 resource "aws_iam_role" "task_role_for_ecs_task" {
-  name               = "task_role_for_ecs_task"
+  name               = "task_role_for_ecs_task-${random_uuid.val.id}"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_role_assume_role.json
   managed_policy_arns = [aws_iam_policy.efs_policy.arn, aws_iam_policy.invoke_lambda.arn]
 }
 
 resource "aws_iam_policy" "efs_policy" {
-  name = "ecs_task_role_efs_policy"
+  name = "ecs_task_role_efs_policy-${random_uuid.val.id}"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -89,7 +89,7 @@ resource "aws_iam_policy" "efs_policy" {
 }
 
 resource "aws_iam_policy" "invoke_lambda" {
-  name = "ecs_task_invoke_lambda_policy"
+  name = "ecs_task_invoke_lambda_policy-${random_uuid.val.id}"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -118,13 +118,13 @@ data "aws_iam_policy_document" "ecs_task_role_assume_role" {
 
 // ECS Execution IAM role
 resource "aws_iam_role" "execution_role_for_ecs_task" {
-  name               = "execution_role_for_ecs_task"
+  name               = "execution_role_for_ecs_task-${random_uuid.val.id}"
   assume_role_policy = data.aws_iam_policy_document.ecs_execution_role_assume_role.json
   managed_policy_arns = [aws_iam_policy.ecs_execution_role_policy.arn]
 }
 
 resource "aws_iam_policy" "ecs_execution_role_policy" {
-  name = "ecs_task_execution_role_policy"
+  name = "ecs_task_execution_role_policy-${random_uuid.val.id}"
 
   policy = jsonencode({
     Version = "2012-10-17"

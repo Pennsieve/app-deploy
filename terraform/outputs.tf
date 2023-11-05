@@ -33,10 +33,10 @@ output "subnet_ids_str" {
   value = local.subnet_ids
 }
 
-output "default_vpc" {
-  description = "default VPC"
+output "vpc" {
+  description = "VPC"
 
-  value = aws_default_vpc.default.arn
+  value = aws_vpc.vpc.arn
 }
 
 output "fargate_ecr_repository" {

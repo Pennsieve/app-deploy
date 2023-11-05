@@ -2,6 +2,7 @@
 resource "aws_efs_file_system" "pipeline" {
   creation_token = "efs-${random_uuid.val.id}"
   encrypted = true
+  availability_zone_name = "us-east-1a" # do we need this?
 
   tags = {
     Name = "efs-${random_uuid.val.id}"
@@ -11,9 +12,8 @@ resource "aws_efs_file_system" "pipeline" {
 // mount target(s)
 resource "aws_efs_mount_target" "mnt" {
   file_system_id = aws_efs_file_system.pipeline.id
-  subnet_id      = split(",", local.subnet_ids)[count.index]
+  subnet_id      = aws_subnet.subnet_private.id
   security_groups = [aws_default_security_group.default.id]
-  count = 6
 }
 
 # EFS access point used by post processor

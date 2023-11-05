@@ -1,13 +1,13 @@
 // API Gateway 
 resource "aws_apigatewayv2_api" "lambda" {
-  name          = "serverless_lambda_gw"
+  name          = "serverless_lambda_gw-${random_uuid.val.id}"
   protocol_type = "HTTP"
 }
 
 resource "aws_apigatewayv2_stage" "lambda" {
   api_id = aws_apigatewayv2_api.lambda.id
 
-  name        = "serverless_lambda_stage"
+  name        = "serverless_lambda_stage-${random_uuid.val.id}"
   auto_deploy = true
 
   access_log_settings {
@@ -45,7 +45,7 @@ resource "aws_apigatewayv2_route" "application_gateway_run" {
 }
 
 resource "aws_cloudwatch_log_group" "api_gw" {
-  name = "/aws/api_gw/${aws_apigatewayv2_api.lambda.name}"
+  name = "/aws/api_gw/${aws_apigatewayv2_api.lambda.name}-${random_uuid.val.id}"
 
   retention_in_days = 30
 }
