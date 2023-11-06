@@ -17,20 +17,20 @@ resource "aws_efs_mount_target" "mnt" {
 }
 
 # EFS access point used by post processor
-resource "aws_efs_access_point" "access_point_for_post_lambda" {
-  file_system_id = aws_efs_file_system.pipeline.id
+# resource "aws_efs_access_point" "access_point_for_post_lambda" {
+#   file_system_id = aws_efs_file_system.pipeline.id
 
-  root_directory {
-    path = "/efs/output"
-    creation_info {
-      owner_gid   = 1000
-      owner_uid   = 1000
-      permissions = "777"
-    }
-  }
+#   root_directory {
+#     path = "/efs/output"
+#     creation_info {
+#       owner_gid   = 1000
+#       owner_uid   = 1000
+#       permissions = "777"
+#     }
+#   }
 
-  posix_user {
-    gid = 1000
-    uid = 1000
-  }
-}
+#   posix_user {
+#     gid = 1000
+#     uid = 1000
+#   }
+# }
