@@ -9,7 +9,7 @@ resource "aws_lambda_function" "application_gateway" {
 
   source_code_hash = data.archive_file.application_gateway_lambda.output_base64sha256
 
-  runtime = "python3.11"
+  runtime = "python3.7" # update to 3.11
 
   environment {
     variables = {
