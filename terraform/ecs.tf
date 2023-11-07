@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "pipeline" {
   container_definitions = jsonencode([
     {
       name      = "pipeline-${random_uuid.val.id}"
-      image     = "${data.aws_ecr_repository.fargate_task.repository_url}:demo2"
+      image     = "${data.aws_ecr_repository.fargate_task.repository_url}:latest"
       cpu       = 10
       memory    = 2048
       essential = true
@@ -50,7 +50,7 @@ resource "aws_ecs_task_definition" "pipeline" {
       mountPoints = [
         {
           sourceVolume = "pipeline-storage-${random_uuid.val.id}"
-          containerPath = "/mnt"
+          containerPath = "/mnt/efs"
           readOnly = false
         }
       ]
@@ -68,6 +68,58 @@ resource "aws_ecs_task_definition" "pipeline" {
 
   volume {
     name = "pipeline-storage-${random_uuid.val.id}"
+
+    efs_volume_configuration {
+      file_system_id          = aws_efs_file_system.pipeline.id
+      root_directory          = "/"
+    }
+  }
+}
+
+// ECS Task definition - pennsieve agent
+resource "aws_ecs_task_definition" "post-processor" {
+  family                = "post-processor-${random_uuid.val.id}"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 1024
+  memory                   = 2048
+  task_role_arn      = aws_iam_role.task_role_for_post_processor.arn
+  execution_role_arn = aws_iam_role.execution_role_for_post_processor.arn
+
+  container_definitions = jsonencode([
+    {
+      name      = "post-processor-${random_uuid.val.id}"
+      image     = "${data.aws_ecr_repository.post_processor.repository_url}:latest"
+      cpu       = 10
+      memory    = 2048
+      essential = true
+      portMappings = [
+        {
+          containerPort = 8081
+          hostPort      = 8081
+        }
+      ]
+      mountPoints = [
+        {
+          sourceVolume = "post-storage-${random_uuid.val.id}"
+          containerPath = "/mnt/efs"
+          readOnly = false
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group = "/ecs/post-processor/${random_uuid.val.id}"
+          awslogs-region = var.region
+          awslogs-stream-prefix = "ecs"
+          awslogs-create-group = "true"
+        }
+      }
+    }
+  ])
+
+  volume {
+    name = "post-storage-${random_uuid.val.id}"
 
     efs_volume_configuration {
       file_system_id          = aws_efs_file_system.pipeline.id
