@@ -26,7 +26,7 @@ resource "aws_ecs_cluster" "pipeline_cluster" {
 
 // ECS Task definition
 resource "aws_ecs_task_definition" "pipeline" {
-  family                = "pipeline1-${random_uuid.val.id}"
+  family                = "pipeline-${random_uuid.val.id}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 1024
@@ -36,7 +36,7 @@ resource "aws_ecs_task_definition" "pipeline" {
 
   container_definitions = jsonencode([
     {
-      name      = "pipeline1-${random_uuid.val.id}"
+      name      = "pipeline-${random_uuid.val.id}"
       image     = "${data.aws_ecr_repository.fargate_task.repository_url}:latest"
       cpu       = 10
       memory    = 2048
