@@ -4,9 +4,10 @@ RUN apk update && apk upgrade
 
 WORKDIR /service/
 
-RUN cp /root/pennsieve /usr/local/bin/
+RUN cp /root/pennsieve /service/
+# RUN chown root:root /service/pennsieve
 
-ENV PATH="${PATH}:/usr/local/bin"
+ENV PATH="${PATH}:/service"
 
 # install Go
 RUN wget https://go.dev/dl/go1.21.0.linux-amd64.tar.gz
@@ -20,6 +21,9 @@ RUN rm -f go1.21.0.linux-amd64.tar.gz
 
 COPY . ./
 RUN GOARCH=amd64 GOOS=linux go build -o /service/bootstrap main.go
+
+RUN chmod +x agent.sh
+RUN chown 1000:1000 agent.sh
 
 RUN apk --no-cache add curl
 
