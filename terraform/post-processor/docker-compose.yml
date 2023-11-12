@@ -1,7 +1,6 @@
 version: '3.9'
 
 services:
-  
   pennsieve-agent:
     env_file:
       - dev.env
@@ -10,7 +9,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-    entrypoint: aws-lambda-rie /service/bootstrap
+    entrypoint: /service/bootstrap
     restart: always
     ports:
       - 9000:8080

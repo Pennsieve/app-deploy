@@ -28,8 +28,8 @@ RUN chown 1000:1000 agent.sh
 RUN apk --no-cache add curl
 
 # install aws-lambda-rie
-RUN curl -Lo aws-lambda-rie https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie \
-&& chmod +x aws-lambda-rie && mv aws-lambda-rie /usr/local/bin/aws-lambda-rie
+# RUN curl -Lo aws-lambda-rie https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie \
+# && chmod +x aws-lambda-rie && mv aws-lambda-rie /usr/local/bin/aws-lambda-rie
 
 RUN mkdir /mnt/efs
 
