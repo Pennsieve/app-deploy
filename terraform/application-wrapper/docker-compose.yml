@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  
+  app-wrapper:
+    env_file:
+      - dev.env
+    image: pennsieve/app-wrapper
+    volumes:
+      - ./data:/service/data
+    container_name: pennsieve/app-wrapper
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    entrypoint: /service/main
