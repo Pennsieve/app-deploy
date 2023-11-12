@@ -20,6 +20,8 @@ def lambda_handler(event, context):
     api_secret = os.environ['PENNSIEVE_API_SECRET']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
+    dataset_id = os.environ['DATASET_ID']
+    pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
 
     # get session_token
     r = requests.get(f"{pennsieve_host}/authentication/cognito-config")
@@ -98,7 +100,11 @@ def lambda_handler(event, context):
                         {
 					        'name': 'PENNSIEVE_AGENT_HOME',
 					        'value': pennieve_agent_home
-				        },  
+				        },
+                        {
+					        'name': 'PENNSIEVE_UPLOAD_BUCKET',
+					        'value': pennsieve_upload_bucket
+				        },    
                         {
 					        'name': 'CLUSTER_NAME',
 					        'value': cluster_name
@@ -115,6 +121,10 @@ def lambda_handler(event, context):
 					        'name': 'SESSION_TOKEN',
 					        'value': session_token
 				        }, 
+                        {
+					        'name': 'DATASET_ID',
+					        'value': dataset_id
+				        },                         
                         
 			     ],
 		        },
