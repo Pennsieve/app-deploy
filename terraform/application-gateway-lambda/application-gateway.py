@@ -23,6 +23,13 @@ def lambda_handler(event, context):
     dataset_id = os.environ['DATASET_ID']
     pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
 
+    if event['isBase64Encoded'] == True:
+        body = base64.b64decode(event['body']).decode('utf-8')
+        event['body'] = body
+        event['isBase64Encoded'] = False
+    json_body = json.loads(event['body'])
+    integration_id = json_body['integrationId']
+
     # get session_token
     r = requests.get(f"{pennsieve_host}/authentication/cognito-config")
     r.raise_for_status()
@@ -49,6 +56,7 @@ def lambda_handler(event, context):
     r.raise_for_status()
     print(r.json())
     
+    # start Fargate task
     if cluster_name != "":
         print("running Fargate task")
         response = ecs_client.run_task(
@@ -71,7 +79,7 @@ def lambda_handler(event, context):
 			        'environment': [
 				        {
 					        'name': 'INTEGRATION_ID',
-					        'value': '1'
+					        'value': integration_id
 				        },
                         {
 					        'name': 'BASE_DIR',
