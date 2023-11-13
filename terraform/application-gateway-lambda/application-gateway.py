@@ -20,7 +20,6 @@ def lambda_handler(event, context):
     api_secret = os.environ['PENNSIEVE_API_SECRET']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
-    dataset_id = os.environ['DATASET_ID']
     pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
 
     if event['isBase64Encoded'] == True:
@@ -128,11 +127,7 @@ def lambda_handler(event, context):
                         {
 					        'name': 'SESSION_TOKEN',
 					        'value': session_token
-				        }, 
-                        {
-					        'name': 'DATASET_ID',
-					        'value': dataset_id
-				        },                         
+				        },                      
                         
 			     ],
 		        },

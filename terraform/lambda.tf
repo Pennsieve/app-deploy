@@ -26,7 +26,6 @@ resource "aws_lambda_function" "application_gateway" {
       PENNSIEVE_API_SECRET = var.api_secret
       PENNSIEVE_API_HOST = var.api_host
       PENNSIEVE_AGENT_HOME = var.pennsieve_agent_home
-      DATASET_ID=var.dataset_id
       PENNSIEVE_UPLOAD_BUCKET=var.pennsieve_upload_bucket
     }
   }
