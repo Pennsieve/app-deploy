@@ -72,7 +72,8 @@ func main() {
 	// get input files
 	sessionToken := os.Getenv("SESSION_TOKEN")
 	apiHost := os.Getenv("PENNSIEVE_API_HOST")
-	integrationResponse, err := getIntegration("https://api2.pennsieve.net", integrationID, sessionToken) // TODO: pass api_host2
+	apiHost2 := os.Getenv("PENNSIEVE_API_HOST2")
+	integrationResponse, err := getIntegration(apiHost2, integrationID, sessionToken) // TODO: pass api_host2
 	if err != nil {
 		log.Fatalln(err)
 	}
