@@ -10,6 +10,7 @@ resource "aws_lambda_function" "application_gateway" {
   source_code_hash = data.archive_file.application_gateway_lambda.output_base64sha256
 
   runtime = "python3.7" # update to 3.11
+  timeout = 60
 
   environment {
     variables = {
@@ -78,3 +79,8 @@ resource "aws_cloudwatch_log_group" "application_gateway-lambda" {
 
 #   retention_in_days = 30
 # }
+
+resource "aws_lambda_function_url" "app_gateway" {
+  function_name      = aws_lambda_function.application_gateway.function_name
+  authorization_type = "NONE"
+}

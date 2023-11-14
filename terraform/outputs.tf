@@ -4,12 +4,6 @@ output "function_name" {
   value = aws_lambda_function.application_gateway.function_name
 }
 
-output "base_url" {
-  description = "Base URL for API Gateway stage."
-
-  value = "${aws_apigatewayv2_stage.lambda.invoke_url}/run"
-}
-
 output "ecs_cluster" {
   description = "ECS cluster"
 
@@ -21,6 +15,7 @@ output "fargate_task_definition" {
 
   value = aws_ecs_task_definition.pipeline.arn
 }
+
 output "subnet_ids" {
   description = "subnet ids comma separated string"
 
@@ -49,4 +44,10 @@ output "post_processor_ecr_repository" {
   description = "Post Processor ECR repository"
 
   value = data.aws_ecr_repository.post_processor.arn
+}
+
+output "app_gateway_url" {
+  description = "App Gateway Public URL"
+
+  value = aws_lambda_function_url.app_gateway.function_url
 }
