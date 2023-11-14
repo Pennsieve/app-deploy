@@ -1,15 +1,17 @@
-## Application Infrastructure as Code (IAC)
+## app-deploy
 
-This repo is for the terraform templates for automated application creation.
+Deploys an application to the cloud (AWS)
 
 To build:
 
-`docker-compose build`
+arm64:
 
-Help:
+`docker build -f Dockerfile_arm64 --progress=plain -t pennsieve/app-deploy .`
 
-`docker-compose run application-iac -cmd -h`
+x86 (64bit):
 
-Supported commands: plan, apply, destroy, output
+`docker build --progress=plain -t pennsieve/app-deploy .`
 
-`docker-compose run application-iac -cmd <command>`
+Supported commands:
+
+`make`

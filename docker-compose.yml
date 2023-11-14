@@ -7,9 +7,8 @@ services:
     image: pennsieve/app-deploy
     volumes:
       - ./terraform:/service/terraform
-      # - $HOME/.aws:/root/.aws:ro
     container_name: app-deploy
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile_arm64
     entrypoint: /service/main
