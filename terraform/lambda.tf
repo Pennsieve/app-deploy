@@ -10,6 +10,7 @@ resource "aws_lambda_function" "application_gateway" {
   source_code_hash = data.archive_file.application_gateway_lambda.output_base64sha256
 
   runtime = "python3.7" # update to 3.11
+  timeout = 60
 
   environment {
     variables = {
@@ -25,8 +26,8 @@ resource "aws_lambda_function" "application_gateway" {
       PENNSIEVE_API_KEY = var.api_key
       PENNSIEVE_API_SECRET = var.api_secret
       PENNSIEVE_API_HOST = var.api_host
+      PENNSIEVE_API_HOST2 = var.api_host2
       PENNSIEVE_AGENT_HOME = var.pennsieve_agent_home
-      DATASET_ID=var.dataset_id
       PENNSIEVE_UPLOAD_BUCKET=var.pennsieve_upload_bucket
     }
   }
@@ -78,3 +79,8 @@ resource "aws_cloudwatch_log_group" "application_gateway-lambda" {
 
 #   retention_in_days = 30
 # }
+
+resource "aws_lambda_function_url" "app_gateway" {
+  function_name      = aws_lambda_function.application_gateway.function_name
+  authorization_type = "NONE"
+}
