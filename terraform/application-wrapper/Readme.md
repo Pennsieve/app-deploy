@@ -9,14 +9,3 @@ On arm64 architectures:
 To run:
 
 `docker-compose up --build`
-
-To deploy:
-
-
-`make create`
-
-Retrieve details from `app_ecr_repository` output: 
-
-`aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName`
-
-`make deploy ACCOUNT=<aws_account_id> REGION=<region> REPO=<repositoryName> AWS_PROFILE=<profile>`
