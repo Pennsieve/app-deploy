@@ -58,7 +58,7 @@ def lambda_handler(event, context):
     
     # start Fargate task
     if cluster_name != "":
-        print("running Fargate task")
+        print("Starting Fargate task")
         response = ecs_client.run_task(
             cluster = cluster_name,
             launchType = 'FARGATE',
@@ -138,6 +138,7 @@ def lambda_handler(event, context):
 		        },
 	        ],
         })
+        print("Fargate task started")
         return {
             'statusCode': 202,
             'body': json.dumps(str(response))
