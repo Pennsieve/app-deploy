@@ -8,10 +8,10 @@ WORKING_DIR   ?= "$(shell pwd)"
 help:
 	@echo "Make Help for $(SERVICE_NAME)"
 	@echo ""
+	@echo "make create - create infrastructure"
 	@echo "make deploy - deploy application"
-	@echo "make create - create application infrastructure"
-	@echo "make destroy - destroy application infrastructure"
-	@echo "make status - check application infrastructure status"
+	@echo "make destroy - destroy infrastructure"
+	@echo "make status - check infrastructure status"
 
 create:
 	docker-compose run app-deploy -cmd plan
