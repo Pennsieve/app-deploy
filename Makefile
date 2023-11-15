@@ -1,4 +1,4 @@
-.PHONY: help create destroy status apply build
+.PHONY: help create destroy status apply deploy
 
 SERVICE_NAME  ?= "app-deploy"
 WORKING_DIR   ?= "$(shell pwd)"
@@ -8,12 +8,12 @@ WORKING_DIR   ?= "$(shell pwd)"
 help:
 	@echo "Make Help for $(SERVICE_NAME)"
 	@echo ""
-	@echo "make build			- build relevant images and push to the cloud"
-	@echo "make create			- create infrastructure"
-	@echo "make destroy			- destroy insfrastructure"
-	@echo "make status			- check insfrastructure status"
+	@echo "make deploy - deploy application"
+	@echo "make create - create application infrastructure"
+	@echo "make destroy - destroy application infrastructure"
+	@echo "make status - check application infrastructure status"
 
-deploy:
+create:
 	docker-compose run app-deploy -cmd plan
 	docker-compose run app-deploy -cmd apply
 
@@ -26,6 +26,9 @@ status:
 apply:
 	docker-compose run app-deploy -cmd apply
 
-build:
-	cd $(WORKING_DIR)/terraform/application-wrapper
-	docker build --file Dockerfile_arm64 --progress=plain -t pennsieve/app-wrapper .
+deploy:
+	cd $(WORKING_DIR)/terraform/application-wrapper; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/app-wrapper .
+	aws ecr get-login-password --profile app-deploy --region us-east-1 | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com
+	docker tag pennsieve/app-wrapper ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${REPO}
+	docker push ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${REPO}
+

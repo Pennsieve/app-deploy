@@ -10,8 +10,8 @@ output "ecs_cluster" {
   value = aws_ecs_cluster.pipeline_cluster.arn
 }
 
-output "fargate_task_definition" {
-  description = "Fargate Task Definition"
+output "app_definition" {
+  description = "App Task Definition"
 
   value = aws_ecs_task_definition.pipeline.arn
 }
@@ -34,10 +34,10 @@ output "default_vpc" {
   value = aws_default_vpc.default.arn
 }
 
-output "fargate_ecr_repository" {
-  description = "Fargate ECR repository"
+output "app_ecr_repository" {
+  description = "App ECR repository"
 
-  value = data.aws_ecr_repository.fargate_task.arn
+  value = aws_ecr_repository.app.repository_url
 }
 
 output "post_processor_ecr_repository" {
