@@ -27,8 +27,9 @@ apply:
 	docker-compose run app-deploy -cmd apply
 
 deploy:
+	@echo "Deploying app"
 	cd $(WORKING_DIR)/terraform/application-wrapper; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/app-wrapper .
-	aws ecr get-login-password --profile app-deploy --region us-east-1 | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com
+	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com
 	docker tag pennsieve/app-wrapper ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${REPO}
 	docker push ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${REPO}
 

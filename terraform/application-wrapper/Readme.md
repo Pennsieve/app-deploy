@@ -12,18 +12,11 @@ To run:
 
 To deploy:
 
-```
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <accountNumber>.dkr.ecr.us-east-1.amazonaws.com
 
-docker build <-f Dockerfile> -t pennsieve/app-wrapper .
+`make create`
 
-docker tag pennsieve/app-wrapper:latest <accountNumber>.dkr.ecr.us-east-1.amazonaws.com/pennsieve/app-wrapper
+Retrieve details from `app_ecr_repository` output: 
 
-docker push <accountNumber>.dkr.ecr.us-east-1.amazonaws.com/pennsieve/app-wrapper
+`aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName`
 
- aws lambda update-function-code \
-      --region us-east-1 \
-      --function-name app-wrapper \
-      --image-uri <accountNumber>.dkr.ecr.us-east-1.amazonaws.com/pennsieve/app-wrapper:latest
-
-```
+`make deploy ACCOUNT=<aws_account_id> REGION=<region> REPO=<repositoryName> AWS_PROFILE=<profile>`
