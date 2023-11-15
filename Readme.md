@@ -15,3 +15,13 @@ x86 (64bit):
 Supported commands:
 
 `make`
+
+`make create`
+
+Retrieve details from `app_ecr_repository` and `post_processor_ecr_repository` output: 
+
+`aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName`
+
+`make deploy ACCOUNT=<aws_account_id> REGION=<region> REPO=<repositoryName>  AWS_PROFILE=<profile> POST_PROCESSOR_REPO=<postProcessorRepositoryName>`
+
+Also keep track of: `app_gateway_url`

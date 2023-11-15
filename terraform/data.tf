@@ -81,8 +81,3 @@ data "aws_iam_policy_document" "iam_policy_document_gateway" {
 #     ]
 #   }
 # }
-
-// Post processor fargate repository
-data "aws_ecr_repository" "post_processor" {
-  name = var.post_processor_repository
-}
