@@ -46,4 +46,4 @@ deploy:
 	cd $(WORKING_DIR)/terraform/post-processor; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/post-processor .
 	docker tag pennsieve/post-processor ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${POST_PROCESSOR_REPO}
 	docker push ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${POST_PROCESSOR_REPO}
-	cd $(WORKING_DIR) ; git checkout .
+	cd $(WORKING_DIR) ; git clean -f
