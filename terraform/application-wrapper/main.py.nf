@@ -4,7 +4,7 @@
 params.execution_script = "$projectDir/main.py"
 
 log.info """\
-    PYTHON ECHO PIPELINE
+    PYTHON PIPELINE
     ===================================
     execution_script        : ${params.execution_script}
     outputdir               : ${params.outputDir}
@@ -13,7 +13,7 @@ log.info """\
     """
     .stripIndent()
 
-process PythonExample {
+process PythonPipeline {
     output:
     stdout
 
@@ -24,7 +24,7 @@ process PythonExample {
 }
 
 workflow {
-    PythonExample()
+    PythonPipeline()
 }
 
 workflow.onComplete {

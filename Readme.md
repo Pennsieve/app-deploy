@@ -22,6 +22,6 @@ Retrieve details from `app_ecr_repository` and `post_processor_ecr_repository` o
 
 `aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName`
 
-`make deploy ACCOUNT=<aws_account_id> REGION=<region> REPO=<repositoryName>  AWS_PROFILE=<profile> POST_PROCESSOR_REPO=<postProcessorRepositoryName>`
+`make deploy ACCOUNT=<aws_account_id> REGION=<region> REPO=<repositoryName>  AWS_PROFILE=<profile> POST_PROCESSOR_REPO=<postProcessorRepositoryName> ENTRYPOINT=main.<extension> EXTERNAL_REPO=<external_repo>`
 
 Also keep track of: `app_gateway_url`
