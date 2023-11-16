@@ -1,0 +1,38 @@
+variable "region" {
+    default = "us-east-1"
+}
+variable "az" {
+    type = list
+    default = ["a", "b", "c", "d", "e", "f"]
+}
+variable "app_repository" {
+    default = "app"
+}
+variable "post_processor_repository" {
+    default = "post-processor"
+}
+
+variable "api_key"{
+    default = ""
+}
+variable "api_secret" {
+    default = ""
+}
+
+variable "api_host" {
+    default = "https://api.pennsieve.net"
+}
+variable "api_host2" {
+    default = "https://api2.pennsieve.net"
+}
+variable "pennsieve_agent_home" {
+    default = "/tmp"
+}
+
+variable "project" {
+  default = "app-deploy"
+}
+
+variable "pennsieve_upload_bucket" {
+  default = "pennsieve-dev-uploads-v2-use1"
+}
