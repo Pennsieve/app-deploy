@@ -11,5 +11,5 @@ services:
     container_name: app-wrapper
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile_arm64 # change to Dockerfile on Linux
     entrypoint: /service/main
