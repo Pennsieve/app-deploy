@@ -43,11 +43,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = os.MkdirAll(fmt.Sprintf("input/%s", integrationID), 0755)
+	// inputDir
+	inputDir := fmt.Sprintf("%s/input/%s", baseDir, integrationID)
+	err = os.MkdirAll(inputDir, 0755)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)
 	}
+
+	// outputDir
 	err = os.MkdirAll("output", 0777)
 	if err != nil {
 		logger.Error(err.Error())
@@ -58,12 +62,14 @@ func main() {
 		logger.Error(err.Error())
 		os.Exit(1)
 	}
-	err = os.MkdirAll(fmt.Sprintf("output/%s", integrationID), 0777)
+
+	outputDir := fmt.Sprintf("%s/output/%s", baseDir, integrationID)
+	err = os.MkdirAll(outputDir, 0777)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)
 	}
-	err = os.Chown(fmt.Sprintf("output/%s", integrationID), 1000, 1000)
+	err = os.Chown(outputDir, 1000, 1000)
 	if err != nil {
 		logger.Error(err.Error())
 		os.Exit(1)
@@ -73,7 +79,7 @@ func main() {
 	sessionToken := os.Getenv("SESSION_TOKEN")
 	apiHost := os.Getenv("PENNSIEVE_API_HOST")
 	apiHost2 := os.Getenv("PENNSIEVE_API_HOST2")
-	integrationResponse, err := getIntegration(apiHost2, integrationID, sessionToken) // TODO: pass api_host2
+	integrationResponse, err := getIntegration(apiHost2, integrationID, sessionToken)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -95,12 +101,11 @@ func main() {
 		logger.ErrorContext(context.Background(), err.Error())
 	}
 
-	// Process - for this example, place input files directly into output dir
-	// ideally this step copies input files into the <input> dir
+	// copy files into input directory
 	fmt.Println(payload.Data)
 	for _, d := range payload.Data {
 		cmd := exec.Command("wget", "-O", d.FileName, d.Url)
-		cmd.Dir = fmt.Sprintf("output/%s", integrationID)
+		cmd.Dir = inputDir
 		var out strings.Builder
 		var stderr strings.Builder
 		cmd.Stdout = &out
@@ -110,6 +115,33 @@ func main() {
 				slog.String("error", stderr.String()))
 		}
 	}
+
+	log.Println("Starting pipeline")
+	// run pipeline
+	cmd := exec.Command("nextflow", "run", "/service/main.nf", "-ansi-log", "false", "--integrationID", integrationID, "--inputDir", inputDir, "--outputDir", outputDir)
+	cmd.Dir = "/service"
+	var out strings.Builder
+	var stderr strings.Builder
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+	if err := cmd.Run(); err != nil {
+		logger.Error(err.Error(),
+			slog.String("error", stderr.String()))
+	}
+	log.Println(out.String())
+
+	// run pipeline
+	ls := exec.Command("ls", "-alh")
+	ls.Dir = outputDir
+	var out2 strings.Builder
+	var stderr2 strings.Builder
+	ls.Stdout = &out2
+	ls.Stderr = &stderr2
+	if err := ls.Run(); err != nil {
+		logger.Error(err.Error(),
+			slog.String("error", stderr2.String()))
+	}
+	log.Println(out2.String())
 
 	// invoke post-processor
 	TaskDefinitionArn := os.Getenv("TASK_DEFINITION_NAME_POST")
