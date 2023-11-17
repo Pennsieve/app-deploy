@@ -1,1 +1,0 @@
-This is where applications are cloned.
