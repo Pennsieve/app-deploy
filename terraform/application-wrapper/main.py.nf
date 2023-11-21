@@ -19,7 +19,7 @@ process PythonPipeline {
 
     script:
     """
-    python3.8 ${params.execution_script} ${params.inputDir} ${params.outputDir}
+    python3.9 ${params.execution_script} ${params.inputDir} ${params.outputDir}
     """
 }
 
