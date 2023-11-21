@@ -51,33 +51,3 @@ data "aws_iam_policy_document" "iam_policy_document_gateway" {
     ]
   }
 }
-
-// policy document - post processor lambda
-# data "aws_iam_policy_document" "iam_policy_document_post_processor" {
-#   statement {
-#     sid    = "CloudwatchPermissions"
-#     effect = "Allow"
-#     actions = [
-#       "logs:CreateLogGroup",
-#       "logs:CreateLogStream",
-#       "logs:PutLogEvents",
-#       "ec2:CreateNetworkInterface",
-#       "ec2:DescribeNetworkInterfaces",
-#       "ec2:DeleteNetworkInterface",
-#       "ec2:AssignPrivateIpAddresses",
-#       "ec2:UnassignPrivateIpAddresses"
-#     ]
-#     resources = ["*"]
-#   }
-
-#     statement {
-#     sid    = "PassRole"
-#     effect = "Allow"
-#     actions = [
-#       "iam:PassRole",
-#     ]
-#     resources = [
-#       "*"
-#     ]
-#   }
-# }
