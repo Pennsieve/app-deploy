@@ -13,7 +13,6 @@ def lambda_handler(event, context):
     container_name = os.environ['CONTAINER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
     subnet_ids = os.environ['SUBNET_IDS']
-    # post_processor_invoke_arn = os.environ['POST_PROCESSOR_INVOKE_ARN']
     task_definition_name_post = os.environ['TASK_DEFINITION_NAME_POST']
     container_name_post = os.environ['CONTAINER_NAME_POST']
     api_key = os.environ['PENNSIEVE_API_KEY']
