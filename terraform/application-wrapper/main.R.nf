@@ -14,7 +14,7 @@ log.info """\
     .stripIndent()
 
 process RPipeline {
-    echo true
+    debug true
 
     output: stdout
 
