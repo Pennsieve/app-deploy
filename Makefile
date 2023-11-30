@@ -38,7 +38,6 @@ deploy:
 		cp $(WORKING_DIR)/terraform/application-wrapper/applications/app/requirements.txt $(WORKING_DIR)/terraform/application-wrapper/requirements.txt
     else ifeq ($(ENTRYPOINT),main.R)
 		cp $(WORKING_DIR)/terraform/application-wrapper/main.R.nf $(WORKING_DIR)/terraform/application-wrapper/main.nf
-		mkdir -p $(WORKING_DIR)/terraform/application-wrapper/dependencies
 		cp -R $(WORKING_DIR)/terraform/application-wrapper/applications/app/dependencies/* $(WORKING_DIR)/terraform/application-wrapper/dependencies
     endif
 	rm -rf $(WORKING_DIR)/terraform/application-wrapper/applications/app
