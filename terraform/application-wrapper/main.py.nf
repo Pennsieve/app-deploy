@@ -14,8 +14,9 @@ log.info """\
     .stripIndent()
 
 process PythonPipeline {
-    output:
-    stdout
+    debug true
+    
+    output: stdout
 
     script:
     """
