@@ -22,12 +22,11 @@ resource "aws_lambda_function" "application_gateway" {
       SECURITY_GROUP_ID = aws_default_security_group.default.id
       TASK_DEFINITION_NAME_POST = aws_ecs_task_definition.post-processor.family
       CONTAINER_NAME_POST = aws_ecs_task_definition.post-processor.family
-      PENNSIEVE_API_KEY = var.api_key
-      PENNSIEVE_API_SECRET = var.api_secret
       PENNSIEVE_API_HOST = var.api_host
       PENNSIEVE_API_HOST2 = var.api_host2
       PENNSIEVE_AGENT_HOME = var.pennsieve_agent_home
       PENNSIEVE_UPLOAD_BUCKET=var.pennsieve_upload_bucket
+      API_KEY_SM_NAME = aws_secretsmanager_secret.api_key_secret.name
     }
   }
 }
