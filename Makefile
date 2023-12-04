@@ -11,7 +11,7 @@ help:
 	@echo "make create - create infrastructure"
 	@echo "make deploy - deploy application"
 	@echo "make destroy - destroy infrastructure"
-	@echo "make status - check infrastructure status"
+	@echo "make status - check infrastructure status and generate graph of infrastructure"
 
 create:
 	docker-compose run app-deploy -cmd plan
