@@ -72,6 +72,19 @@ func main() {
 		}
 		log.Println("terraform output", terraformOutput.GetStdOut())
 	}
+
+	if *cmdPtr == "graph" {
+		log.Println("generating graph ...")
+		pipeCmd := "terraform graph -draw-cycles | dot -Tsvg > graph.svg"
+		terraformOutput := NewExecution(exec.Command("bash", "-c", pipeCmd),
+			TerraformDirectory,
+			nil)
+		if err := terraformOutput.Run(); err != nil {
+			log.Println("terraform graph error", terraformOutput.GetStdErr())
+		}
+		log.Println("graph svg generated")
+	}
+
 	log.Println("done")
 }
 
