@@ -8,3 +8,6 @@ terraform/.terraform/*
 *.zip
 terraform/variables.tf
 .vscode/settings.json
+*.dot
+*.svg
+.DS_Store
