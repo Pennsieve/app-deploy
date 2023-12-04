@@ -1,4 +1,6 @@
 from boto3 import client as boto3_client
+from boto3 import session as boto3_session
+from botocore.exceptions import ClientError
 from datetime import datetime
 import json
 import base64
@@ -15,12 +17,33 @@ def lambda_handler(event, context):
     subnet_ids = os.environ['SUBNET_IDS']
     task_definition_name_post = os.environ['TASK_DEFINITION_NAME_POST']
     container_name_post = os.environ['CONTAINER_NAME_POST']
-    api_key = os.environ['PENNSIEVE_API_KEY']
-    api_secret = os.environ['PENNSIEVE_API_SECRET']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
     pennieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
     pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
+
+    # gets api key secrets
+    secret_name = os.environ['API_KEY_SM_NAME']
+    region_name = os.environ['REGION']
+
+    # Create a Secrets Manager client
+    session = boto3_session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        raise e
+
+    # Decrypts secret using the associated KMS key.
+    secret = get_secret_value_response['SecretString']
+    d = json.loads(secret)
+    api_key, api_secret = list(d.items())[0]
 
     if event['isBase64Encoded'] == True:
         body = base64.b64decode(event['body']).decode('utf-8')
