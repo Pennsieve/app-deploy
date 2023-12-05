@@ -70,7 +70,7 @@ func main() {
 		if err := terraformOutput.Run(); err != nil {
 			log.Println("terraform output error", terraformOutput.GetStdErr())
 		}
-		log.Println("terraform output", terraformOutput.GetStdOut())
+		log.Println(terraformOutput.GetStdOut())
 	}
 
 	if *cmdPtr == "graph" {
