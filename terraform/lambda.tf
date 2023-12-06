@@ -3,6 +3,7 @@ resource "aws_lambda_function" "application_gateway" {
   function_name = "application-gateway-${random_uuid.val.id}"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "application-gateway.lambda_handler" # module is name of python file: application
+  description   = "Lambda function that is the entrypoint to the external application"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.application_gateway_lambda.key

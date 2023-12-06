@@ -32,7 +32,13 @@ resource "aws_default_subnet" "default_az1" {
   count = 6
 }
 
+resource "aws_route" "ig_route" {
+  route_table_id         = "${aws_default_vpc.default.default_route_table_id}"
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = "${data.aws_internet_gateway.default.id}"
+}
+
 locals {
-  subnet_ids = "${aws_default_subnet.default_az1[0].id},${aws_default_subnet.default_az1[1].id},${aws_default_subnet.default_az1[2].id},${aws_default_subnet.default_az1[3].id},${aws_default_subnet.default_az1[4].id},${aws_default_subnet.default_az1[5].id}"
-  subnet_ids_list = [aws_default_subnet.default_az1[0].id, aws_default_subnet.default_az1[1].id, aws_default_subnet.default_az1[2].id, aws_default_subnet.default_az1[3].id, aws_default_subnet.default_az1[4].id, aws_default_subnet.default_az1[5].id]
+  subnet_ids = join(",", aws_default_subnet.default_az1[*].id)
+  subnet_ids_list = aws_default_subnet.default_az1[*].id
 }
