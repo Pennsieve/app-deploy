@@ -22,6 +22,7 @@ destroy:
 
 status:
 	docker-compose run app-deploy -cmd plan
+	docker-compose run app-deploy -cmd output
 	docker-compose run app-deploy -cmd graph
 
 apply:
