@@ -11,3 +11,4 @@ terraform/variables.tf
 *.dot
 *.svg
 .DS_Store
+*.log
