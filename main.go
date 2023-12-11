@@ -11,6 +11,7 @@ import (
 
 var TerraformDirectory = "/service/terraform"
 var TerraformStateDirectory = "/service/terraform/remote-state"
+var TerraformDeploymentsDirectory = "/service/application-deployments"
 
 func main() {
 	cmdPtr := flag.String("cmd", "plan", "command to execute")
@@ -66,7 +67,9 @@ func main() {
 	if *cmdPtr == "plan" {
 		log.Println("Running init and plan ...")
 		// init
-		terraformInit := NewExecution(exec.Command("terraform", "init", "-force-copy"),
+		backendFileLocation := fmt.Sprintf("%s/%s", TerraformDeploymentsDirectory, os.Getenv("TF_BACKEND_FILE_LOCATION"))
+		initCmd := fmt.Sprintf("terraform init -force-copy -backend-config=%s", backendFileLocation)
+		terraformInit := NewExecution(exec.Command("bash", "-c", initCmd),
 			TerraformDirectory,
 			nil)
 		if err := terraformInit.Run(); err != nil {
@@ -75,7 +78,9 @@ func main() {
 		log.Println("terraform init", terraformInit.GetStdOut())
 
 		// plan
-		terraformPlan := NewExecution(exec.Command("terraform", "plan", "-out=tfplan"),
+		varFileLocation := fmt.Sprintf("%s/%s", TerraformDeploymentsDirectory, os.Getenv("TF_VAR_FILE_LOCATION"))
+		planCmd := fmt.Sprintf("terraform plan -out=tfplan -var-file=%s", varFileLocation)
+		terraformPlan := NewExecution(exec.Command("bash", "-c", planCmd),
 			TerraformDirectory,
 			map[string]string{
 				"AWS_ACCESS_KEY_ID":     os.Getenv("AWS_ACCESS_KEY_ID"),

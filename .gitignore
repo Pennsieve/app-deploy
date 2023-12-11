@@ -20,3 +20,5 @@ terraform/remote-state/.terraform/providers/registry.terraform.io/hashicorp/aws/
 terraform/remote-state/.terraform/providers/registry.terraform.io/hashicorp/random/3.6.0/linux_arm64/terraform-provider-random_v3.6.0_x5
 terraform/remote-state/tfplan
 terraform/remote-state/terraform.tfstate.backup
+*.tfbackend
+*.tfvars
