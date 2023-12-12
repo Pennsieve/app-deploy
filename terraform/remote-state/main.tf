@@ -5,10 +5,6 @@ resource "random_uuid" "val" {
 
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "tfstate-${random_uuid.val.id}"
-     
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "aws_s3_bucket_versioning" "terraform_state" {
@@ -17,17 +13,5 @@ resource "aws_s3_bucket_versioning" "terraform_state" {
     versioning_configuration {
       status = "Enabled"
     }
-}
-
-resource "aws_dynamodb_table" "terraform_state_lock" {
-  name           = "app-state-${random_uuid.val.id}"
-  read_capacity  = 1
-  write_capacity = 1
-  hash_key       = "LockID"
-
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
 }
 

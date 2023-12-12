@@ -2,7 +2,7 @@
 terraform/.terraform.lock.hcl
 terraform/terraform.tfstate.backup
 terraform/tfplan
-terraform/.terraform/providers/registry.terraform.io/hashicorp/aws/5.21.0/linux_amd64/terraform-provider-aws_v5.21.0_x5
+terraform/.terraform/*
 terraform/terraform.tfstate
 terraform/.terraform/*
 *.zip
@@ -14,11 +14,12 @@ terraform/variables.tf
 *.log
 terraform/backend.tf
 terraform/remote-state/.terraform.lock.hcl
-terraform/remote-state/terraform.tfstate
 .gitignore
-terraform/remote-state/.terraform/providers/registry.terraform.io/hashicorp/aws/5.29.0/linux_arm64/terraform-provider-aws_v5.29.0_x5
-terraform/remote-state/.terraform/providers/registry.terraform.io/hashicorp/random/3.6.0/linux_arm64/terraform-provider-random_v3.6.0_x5
+terraform/remote-state/.terraform/*
 terraform/remote-state/tfplan
 terraform/remote-state/terraform.tfstate.backup
 *.tfbackend
 *.tfvars
+*.tfstate
+application-deployments/dev/*
+application-deployments/prod/*
