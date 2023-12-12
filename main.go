@@ -53,6 +53,8 @@ func main() {
 		log.Println("terraform apply", terraformApply.GetStdOut())
 	}
 
+	planLocation := fmt.Sprintf("%s/tfplan", os.Getenv("WORKING_DATA_DIR"))
+
 	if *cmdPtr == "destroy-state" {
 		log.Println("Running destroy ...")
 		terraformDestroy := NewExecution(exec.Command("terraform", "apply", "-destroy", "-auto-approve"),
@@ -79,7 +81,8 @@ func main() {
 
 		// plan
 		varFileLocation := fmt.Sprintf("%s/%s", TerraformDeploymentsDirectory, os.Getenv("TF_VAR_FILE_LOCATION"))
-		planCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform plan -out=tfplan -var-file=%s", os.Getenv("WORKING_DATA_DIR"), varFileLocation)
+
+		planCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform plan -out=%s -var-file=%s", os.Getenv("WORKING_DATA_DIR"), planLocation, varFileLocation)
 		terraformPlan := NewExecution(exec.Command("bash", "-c", planCmd),
 			TerraformDirectory,
 			map[string]string{
@@ -95,7 +98,7 @@ func main() {
 
 	if *cmdPtr == "apply" {
 		log.Println("Running apply ...")
-		applyCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform apply tfplan", os.Getenv("WORKING_DATA_DIR"))
+		applyCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform apply %s", os.Getenv("WORKING_DATA_DIR"), planLocation)
 		terraformApply := NewExecution(exec.Command("bash", "-c", applyCmd),
 			TerraformDirectory,
 			nil)
