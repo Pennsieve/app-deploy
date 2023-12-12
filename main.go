@@ -134,7 +134,9 @@ func main() {
 
 	if *cmdPtr == "graph" {
 		log.Println("generating graph ...")
-		pipeCmd := "TF_DATA_DIR=%s terraform graph -draw-cycles | dot -Tsvg > graph.svg"
+		svgLocation := fmt.Sprintf("%s/graph.svg", os.Getenv("WORKING_DATA_DIR"))
+		pipeCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform graph -draw-cycles | dot -Tsvg > %s",
+			os.Getenv("WORKING_DATA_DIR"), svgLocation)
 		terraformOutput := NewExecution(exec.Command("bash", "-c", pipeCmd),
 			TerraformDirectory,
 			nil)
