@@ -68,7 +68,7 @@ func main() {
 		log.Println("Running init and plan ...")
 		// init
 		backendFileLocation := fmt.Sprintf("%s/%s", TerraformDeploymentsDirectory, os.Getenv("TF_BACKEND_FILE_LOCATION"))
-		initCmd := fmt.Sprintf("terraform init -force-copy -backend-config=%s", backendFileLocation)
+		initCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform init -force-copy -backend-config=%s", os.Getenv("WORKING_DATA_DIR"), backendFileLocation)
 		terraformInit := NewExecution(exec.Command("bash", "-c", initCmd),
 			TerraformDirectory,
 			nil)
@@ -79,7 +79,7 @@ func main() {
 
 		// plan
 		varFileLocation := fmt.Sprintf("%s/%s", TerraformDeploymentsDirectory, os.Getenv("TF_VAR_FILE_LOCATION"))
-		planCmd := fmt.Sprintf("terraform plan -out=tfplan -var-file=%s", varFileLocation)
+		planCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform plan -out=tfplan -var-file=%s", os.Getenv("WORKING_DATA_DIR"), varFileLocation)
 		terraformPlan := NewExecution(exec.Command("bash", "-c", planCmd),
 			TerraformDirectory,
 			map[string]string{
@@ -95,7 +95,8 @@ func main() {
 
 	if *cmdPtr == "apply" {
 		log.Println("Running apply ...")
-		terraformApply := NewExecution(exec.Command("terraform", "apply", "tfplan"),
+		applyCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform apply tfplan", os.Getenv("WORKING_DATA_DIR"))
+		terraformApply := NewExecution(exec.Command("bash", "-c", applyCmd),
 			TerraformDirectory,
 			nil)
 		if err := terraformApply.Run(); err != nil {
@@ -106,7 +107,8 @@ func main() {
 
 	if *cmdPtr == "destroy" {
 		log.Println("Running destroy ...")
-		terraformDestroy := NewExecution(exec.Command("terraform", "apply", "-destroy", "-auto-approve"),
+		destroyCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform apply -destroy -auto-approve", os.Getenv("WORKING_DATA_DIR"))
+		terraformDestroy := NewExecution(exec.Command("bash", "-c", "-destroy", destroyCmd),
 			TerraformDirectory,
 			nil)
 		if err := terraformDestroy.Run(); err != nil {
@@ -117,7 +119,8 @@ func main() {
 
 	if *cmdPtr == "output" {
 		log.Println("Outputting values ...")
-		terraformOutput := NewExecution(exec.Command("terraform", "output"),
+		outputCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform output", os.Getenv("WORKING_DATA_DIR"))
+		terraformOutput := NewExecution(exec.Command("bash", "-c", outputCmd),
 			TerraformDirectory,
 			nil)
 		if err := terraformOutput.Run(); err != nil {
@@ -128,7 +131,7 @@ func main() {
 
 	if *cmdPtr == "graph" {
 		log.Println("generating graph ...")
-		pipeCmd := "terraform graph -draw-cycles | dot -Tsvg > graph.svg"
+		pipeCmd := "TF_DATA_DIR=%s terraform graph -draw-cycles | dot -Tsvg > graph.svg"
 		terraformOutput := NewExecution(exec.Command("bash", "-c", pipeCmd),
 			TerraformDirectory,
 			nil)
