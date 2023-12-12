@@ -111,7 +111,7 @@ func main() {
 	if *cmdPtr == "destroy" {
 		log.Println("Running destroy ...")
 		destroyCmd := fmt.Sprintf("TF_DATA_DIR=%s terraform apply -destroy -auto-approve", os.Getenv("WORKING_DATA_DIR"))
-		terraformDestroy := NewExecution(exec.Command("bash", "-c", "-destroy", destroyCmd),
+		terraformDestroy := NewExecution(exec.Command("bash", "-c", destroyCmd),
 			TerraformDirectory,
 			nil)
 		if err := terraformDestroy.Run(); err != nil {
