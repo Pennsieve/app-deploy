@@ -28,6 +28,7 @@ resource "aws_lambda_function" "application_gateway" {
       PENNSIEVE_AGENT_HOME = var.pennsieve_agent_home
       PENNSIEVE_UPLOAD_BUCKET=var.pennsieve_upload_bucket
       API_KEY_SM_NAME = aws_secretsmanager_secret.api_key_secret.name
+      ENVIRONMENT=var.environment
     }
   }
 }
