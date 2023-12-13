@@ -20,12 +20,15 @@ variable "pennsieve_agent_home" {
     type = string
 }
 variable "project" {
-  type = string
+    type = string
 }
 variable "pennsieve_upload_bucket" {
-  type = string
+    type = string
 }
 variable "api_key_secret" {
-  type = map(string)
-  sensitive   = true
+    type = map(string)
+    sensitive   = true
+}
+variable "environment" {
+    type = string
 }

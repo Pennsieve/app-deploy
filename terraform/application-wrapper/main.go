@@ -154,6 +154,7 @@ func main() {
 	apiSecret := os.Getenv("PENNSIEVE_API_SECRET")
 	agentHome := os.Getenv("PENNSIEVE_AGENT_HOME")
 	upload_bucket := os.Getenv("PENNSIEVE_UPLOAD_BUCKET")
+	environment := os.Getenv("ENVIRONMENT")
 
 	cfg, err := config.LoadDefaultConfig(context.Background())
 	if err != nil {
@@ -168,6 +169,7 @@ func main() {
 	integrationIDKey := "INTEGRATION_ID"
 	datasetIDKey := "DATASET_ID"
 	uploadBucketKey := "PENNSIEVE_UPLOAD_BUCKET"
+	environmentKey := "ENVIRONMENT"
 
 	log.Println("Initiating post processing Task.")
 	runTaskIn := &ecs.RunTaskInput{
@@ -212,6 +214,10 @@ func main() {
 						{
 							Name:  &uploadBucketKey,
 							Value: &upload_bucket,
+						},
+						{
+							Name:  &environmentKey,
+							Value: &environment,
 						},
 					},
 				},
