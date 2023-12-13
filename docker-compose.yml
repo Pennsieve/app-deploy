@@ -3,10 +3,11 @@ version: '3.9'
 services:
   app-deploy:
     env_file:
-      - aws.env
+      - application.env
     image: pennsieve/app-deploy
     volumes:
       - ./terraform:/service/terraform
+      - ./application-deployments:/service/application-deployments
     container_name: app-deploy
     build:
       context: .

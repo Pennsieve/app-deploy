@@ -27,6 +27,7 @@ RUN rm -f go1.21.0.linux-arm64.tar.gz
 
 COPY . ./
 ADD terraform/ /service/terraform/
+ADD application-deployments/ /service/application-deployments/
 
 RUN go build -o /service/main main.go
 
