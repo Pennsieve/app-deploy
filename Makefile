@@ -8,10 +8,24 @@ WORKING_DIR   ?= "$(shell pwd)"
 help:
 	@echo "Make Help for $(SERVICE_NAME)"
 	@echo ""
+	@echo "make create-backend - creates storage for state file"
 	@echo "make create - create infrastructure"
 	@echo "make deploy - deploy application"
 	@echo "make destroy - destroy infrastructure"
 	@echo "make status - check infrastructure status and generate graph of infrastructure"
+
+plan-state:
+	docker-compose run app-deploy -cmd plan-state
+
+apply-state:
+	docker-compose run app-deploy -cmd apply-state	
+
+create-backend:
+	plan-state
+	apply-state
+
+remove-backend:
+	docker-compose run app-deploy -cmd destroy-state	
 
 create:
 	docker-compose run app-deploy -cmd plan
@@ -27,6 +41,10 @@ status:
 
 apply:
 	docker-compose run app-deploy -cmd apply
+
+create-route:
+	docker-compose run app-deploy -cmd plan-route
+	docker-compose run app-deploy -cmd apply-route	
 
 deploy:
 	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com
