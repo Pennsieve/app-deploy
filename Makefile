@@ -15,11 +15,17 @@ help:
 	@echo "make status - check infrastructure status and generate graph of infrastructure"
 
 plan-state:
-	docker-compose run app-deploy -cmd plan-state	
+	docker-compose run app-deploy -cmd plan-state
+
+apply-state:
+	docker-compose run app-deploy -cmd apply-state	
 
 create-backend:
-	docker-compose run app-deploy -cmd plan-state
-	docker-compose run app-deploy -cmd apply-state
+	plan-state
+	apply-state
+
+remove-backend:
+	docker-compose run app-deploy -cmd destroy-state	
 
 create:
 	docker-compose run app-deploy -cmd plan
@@ -27,9 +33,6 @@ create:
 
 destroy:
 	docker-compose run app-deploy -cmd destroy
-
-destroy-state:
-	docker-compose run app-deploy -cmd destroy-state
 
 status:
 	docker-compose run app-deploy -cmd plan
@@ -39,8 +42,9 @@ status:
 apply:
 	docker-compose run app-deploy -cmd apply
 
-apply-state:
-	docker-compose run app-deploy -cmd apply-state
+create-route:
+	docker-compose run app-deploy -cmd plan-route
+	docker-compose run app-deploy -cmd apply-route	
 
 deploy:
 	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com

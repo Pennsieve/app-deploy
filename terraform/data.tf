@@ -62,10 +62,3 @@ data "aws_iam_policy_document" "iam_policy_document_gateway" {
     ]
   }
 }
-
-data "aws_internet_gateway" "default" {
-  filter {
-    name   = "attachment.vpc-id"
-    values = [aws_default_vpc.default.id]
-  }
-}

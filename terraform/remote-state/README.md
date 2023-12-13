@@ -1,0 +1,1 @@
+The remote state S3 bucket needs to be created before the application infrastructure is created.

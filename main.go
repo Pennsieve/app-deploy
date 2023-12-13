@@ -12,11 +12,13 @@ import (
 var TerraformDirectory = "/service/terraform"
 var TerraformStateDirectory = "/service/terraform/remote-state"
 var TerraformDeploymentsDirectory = "/service/application-deployments"
+var TerraformGatewayDirectory = "/service/terraform/internet-gateway"
 
 func main() {
 	cmdPtr := flag.String("cmd", "plan", "command to execute")
 	flag.Parse()
 
+	// Remote State Management - S3 Backend
 	if *cmdPtr == "plan-state" {
 		log.Println("Initializing state")
 		// init
@@ -53,8 +55,6 @@ func main() {
 		log.Println("terraform apply", terraformApply.GetStdOut())
 	}
 
-	planLocation := fmt.Sprintf("%s/tfplan", os.Getenv("WORKING_DATA_DIR"))
-
 	if *cmdPtr == "destroy-state" {
 		log.Println("Running destroy ...")
 		terraformDestroy := NewExecution(exec.Command("terraform", "apply", "-destroy", "-auto-approve"),
@@ -66,6 +66,56 @@ func main() {
 		log.Println("terraform destroy", terraformDestroy.GetStdOut())
 	}
 
+	// Creating a route in route table
+	if *cmdPtr == "plan-route" {
+		log.Println("Initializing route creation")
+		// init
+		terraformInit := NewExecution(exec.Command("terraform", "init"),
+			TerraformGatewayDirectory,
+			nil)
+		if err := terraformInit.Run(); err != nil {
+			log.Println("terraform init error", terraformInit.GetStdErr())
+		}
+		log.Println("terraform init", terraformInit.GetStdOut())
+
+		// plan
+		terraformPlan := NewExecution(exec.Command("terraform", "plan", "-out=tfplan"),
+			TerraformGatewayDirectory,
+			map[string]string{
+				"AWS_ACCESS_KEY_ID":     os.Getenv("AWS_ACCESS_KEY_ID"),
+				"AWS_SECRET_ACCESS_KEY": os.Getenv("AWS_SECRET_ACCESS_KEY"),
+				"AWS_DEFAULT_REGION":    os.Getenv("AWS_DEFAULT_REGION"),
+			})
+		if err := terraformPlan.Run(); err != nil {
+			log.Println("terraform plan error", terraformPlan.GetStdErr())
+		}
+		log.Println("terraform plan", terraformPlan.GetStdOut())
+	}
+
+	if *cmdPtr == "apply-route" {
+		log.Println("Running apply ...")
+		terraformApply := NewExecution(exec.Command("terraform", "apply", "tfplan"),
+			TerraformGatewayDirectory,
+			nil)
+		if err := terraformApply.Run(); err != nil {
+			log.Println("terraform apply error", terraformApply.GetStdErr())
+		}
+		log.Println("terraform apply", terraformApply.GetStdOut())
+	}
+
+	if *cmdPtr == "destroy-route" {
+		log.Println("Running destroy ...")
+		terraformDestroy := NewExecution(exec.Command("terraform", "apply", "-destroy", "-auto-approve"),
+			TerraformGatewayDirectory,
+			nil)
+		if err := terraformDestroy.Run(); err != nil {
+			log.Println("terraform destroy error", terraformDestroy.GetStdErr())
+		}
+		log.Println("terraform destroy", terraformDestroy.GetStdOut())
+	}
+
+	// Infrastructure creation
+	planLocation := fmt.Sprintf("%s/tfplan", os.Getenv("WORKING_DATA_DIR"))
 	if *cmdPtr == "plan" {
 		log.Println("Running init and plan ...")
 		// init
