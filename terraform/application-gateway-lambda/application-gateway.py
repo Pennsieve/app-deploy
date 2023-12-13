@@ -21,6 +21,7 @@ def lambda_handler(event, context):
     pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
     pennieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
     pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
+    environment = os.environ['ENVIRONMENT']
 
     # gets api key secrets
     secret_name = os.environ['API_KEY_SM_NAME']
@@ -154,7 +155,11 @@ def lambda_handler(event, context):
                         {
 					        'name': 'SESSION_TOKEN',
 					        'value': session_token
-				        },                      
+				        },
+                        {
+					        'name': 'ENVIRONMENT',
+					        'value': environment
+				        },                   
                         
 			     ],
 		        },
