@@ -20,10 +20,6 @@ plan-state:
 apply-state:
 	docker-compose run app-deploy -cmd apply-state	
 
-create-backend:
-	plan-state
-	apply-state
-
 remove-backend:
 	docker-compose run app-deploy -cmd destroy-state	
 
