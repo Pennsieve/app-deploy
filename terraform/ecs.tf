@@ -29,8 +29,8 @@ resource "aws_ecs_task_definition" "pipeline" {
   family                = "pipeline-${random_uuid.val.id}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 1024
-  memory                   = 2048
+  cpu                      = 2048
+  memory                   = 4096
   task_role_arn      = aws_iam_role.task_role_for_ecs_task.arn
   execution_role_arn = aws_iam_role.execution_role_for_ecs_task.arn
 
@@ -38,8 +38,6 @@ resource "aws_ecs_task_definition" "pipeline" {
     {
       name      = "pipeline-${random_uuid.val.id}"
       image     = aws_ecr_repository.app.repository_url
-      cpu       = 10
-      memory    = 2048
       essential = true
       portMappings = [
         {
@@ -81,8 +79,8 @@ resource "aws_ecs_task_definition" "post-processor" {
   family                = "post-processor-${random_uuid.val.id}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 1024
-  memory                   = 2048
+  cpu                      = 2048
+  memory                   = 4096
   task_role_arn      = aws_iam_role.task_role_for_post_processor.arn
   execution_role_arn = aws_iam_role.execution_role_for_post_processor.arn
 
@@ -90,8 +88,6 @@ resource "aws_ecs_task_definition" "post-processor" {
     {
       name      = "post-processor-${random_uuid.val.id}"
       image     = aws_ecr_repository.post-processor.repository_url
-      cpu       = 10
-      memory    = 2048
       essential = true
       portMappings = [
         {
