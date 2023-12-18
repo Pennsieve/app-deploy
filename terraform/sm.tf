@@ -1,6 +1,7 @@
 // Creates Secrets Manager resource
 resource "aws_secretsmanager_secret" "api_key_secret" {
   name = "api-key-secret-${random_uuid.val.id}"
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "api_key_secret" {
