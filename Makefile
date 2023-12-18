@@ -14,14 +14,11 @@ help:
 	@echo "make destroy - destroy infrastructure"
 	@echo "make status - check infrastructure status and generate graph of infrastructure"
 
-plan-state:
-	docker-compose run app-deploy -cmd plan-state
+create-backend:
+	docker-compose run app-deploy -cmd create-backend
 
-apply-state:
-	docker-compose run app-deploy -cmd apply-state	
-
-remove-backend:
-	docker-compose run app-deploy -cmd destroy-state	
+delete-backend:
+	docker-compose run app-deploy -cmd delete-backend	
 
 create:
 	docker-compose run app-deploy -cmd plan
