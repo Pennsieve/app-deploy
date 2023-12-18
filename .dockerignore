@@ -7,3 +7,5 @@ terraform/terraform.tfstate
 terraform/.terraform/*
 *.zip
 .vscode/settings.json
+terraform/*/.terraform/*
+application-deployments/*

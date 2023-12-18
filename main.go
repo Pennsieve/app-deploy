@@ -18,55 +18,18 @@ func main() {
 	cmdPtr := flag.String("cmd", "plan", "command to execute")
 	flag.Parse()
 
-	// Remote State Management - S3 Backend
-	if *cmdPtr == "plan-state" {
-		log.Println("Initializing state")
-		// init
-		terraformInit := NewExecution(exec.Command("terraform", "init"),
-			TerraformStateDirectory,
-			nil)
-		if err := terraformInit.Run(); err != nil {
-			log.Println("terraform init error", terraformInit.GetStdErr())
+	// Remote State Management - S3 Backend (once-off)
+	if *cmdPtr == "create-backend" || *cmdPtr == "delete-backend" {
+		cmd := exec.Command("/bin/sh", "./scripts/remote-state.sh", TerraformStateDirectory, *cmdPtr)
+		out, err := cmd.Output()
+		if err != nil {
+			log.Fatalf("error %s", err)
 		}
-		log.Println("terraform init", terraformInit.GetStdOut())
-
-		// plan
-		terraformPlan := NewExecution(exec.Command("terraform", "plan", "-out=tfplan"),
-			TerraformStateDirectory,
-			map[string]string{
-				"AWS_ACCESS_KEY_ID":     os.Getenv("AWS_ACCESS_KEY_ID"),
-				"AWS_SECRET_ACCESS_KEY": os.Getenv("AWS_SECRET_ACCESS_KEY"),
-				"AWS_DEFAULT_REGION":    os.Getenv("AWS_DEFAULT_REGION"),
-			})
-		if err := terraformPlan.Run(); err != nil {
-			log.Println("terraform plan error", terraformPlan.GetStdErr())
-		}
-		log.Println("terraform plan", terraformPlan.GetStdOut())
+		output := string(out)
+		fmt.Println(output)
 	}
 
-	if *cmdPtr == "apply-state" {
-		log.Println("Running apply ...")
-		terraformApply := NewExecution(exec.Command("terraform", "apply", "tfplan"),
-			TerraformStateDirectory,
-			nil)
-		if err := terraformApply.Run(); err != nil {
-			log.Println("terraform apply error", terraformApply.GetStdErr())
-		}
-		log.Println("terraform apply", terraformApply.GetStdOut())
-	}
-
-	if *cmdPtr == "destroy-state" {
-		log.Println("Running destroy ...")
-		terraformDestroy := NewExecution(exec.Command("terraform", "apply", "-destroy", "-auto-approve"),
-			TerraformStateDirectory,
-			nil)
-		if err := terraformDestroy.Run(); err != nil {
-			log.Println("terraform destroy error", terraformDestroy.GetStdErr())
-		}
-		log.Println("terraform destroy", terraformDestroy.GetStdOut())
-	}
-
-	// Creating a route in route table
+	// Creating a route in route table (once-off)
 	if *cmdPtr == "plan-route" {
 		log.Println("Initializing route creation")
 		// init
