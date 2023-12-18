@@ -21,19 +21,13 @@ delete-backend:
 	docker-compose run app-deploy -cmd delete-backend	
 
 create:
-	docker-compose run app-deploy -cmd plan
-	docker-compose run app-deploy -cmd apply
+	docker-compose run app-deploy -cmd create
 
 destroy:
 	docker-compose run app-deploy -cmd destroy
 
 status:
-	docker-compose run app-deploy -cmd plan
-	docker-compose run app-deploy -cmd output
-	docker-compose run app-deploy -cmd graph
-
-apply:
-	docker-compose run app-deploy -cmd apply
+	docker-compose run app-deploy -cmd status
 
 create-route:
 	docker-compose run app-deploy -cmd create-route
