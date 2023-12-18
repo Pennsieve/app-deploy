@@ -1,6 +1,6 @@
 cd $1
 
-if [ $2 = "create-backend" ]; then
+if [ $2 = "create-route" ]; then
   echo "creating ..."
   terraform init
   terraform plan -out=tfplan
