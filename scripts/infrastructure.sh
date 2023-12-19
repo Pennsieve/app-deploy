@@ -1,5 +1,19 @@
+#!/bin/sh
+
 cd $1
 export TF_DATA_DIR=$2
+
+echo "Creating backend config"
+  /bin/cat > "$2/${ENVIRONMENT}.tfbackend" <<EOL
+bucket  = "${TF_REMOTE_BUCKET}"
+key     = "${ENVIRONMENT}/${GIT_REPOSITORY}/terraform.tfstate"
+EOL
+
+echo "Creating tfvars config"
+  /bin/cat > "$2/${ENVIRONMENT}.tfvars" <<EOL
+bucket  = "${TF_REMOTE_BUCKET}"
+key     = "${ENVIRONMENT}/${GIT_REPOSITORY}/terraform.tfstate"
+EOL
 
 if [ $7 = "destroy" ]; then
   echo "Running destroy ..."
