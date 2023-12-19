@@ -11,8 +11,18 @@ EOL
 
 echo "Creating tfvars config"
   /bin/cat > "$2/${ENVIRONMENT}.tfvars" <<EOL
-bucket  = "${TF_REMOTE_BUCKET}"
-key     = "${ENVIRONMENT}/${GIT_REPOSITORY}/terraform.tfstate"
+region = "${AWS_DEFAULT_REGION}"
+az = ["a", "b", "c", "d", "e", "f"]
+app_repository = "app"
+post_processor_repository = "post-processor"
+api_host = "${API_HOST}"
+api_host2 = "${API_HOST2}"
+pennsieve_agent_home = "/tmp"
+pennsieve_upload_bucket = "${PENNSIEVE_UPLOAD_BUCKET}"
+api_key_secret = {
+    "${API_KEY}" = "${API_SECRET}"
+}
+environment = "${ENVIRONMENT}"
 EOL
 
 if [ $7 = "destroy" ]; then

@@ -19,9 +19,6 @@ variable "api_host2" {
 variable "pennsieve_agent_home" {
     type = string
 }
-variable "project" {
-    type = string
-}
 variable "pennsieve_upload_bucket" {
     type = string
 }
