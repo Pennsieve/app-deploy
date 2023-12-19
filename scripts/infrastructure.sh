@@ -1,5 +1,7 @@
 #!/bin/sh
 
+echo "RUNNING IN ENVIRONMENT: $ENVIRONMENT"
+
 DEPLOYMENTS_DIR="/service/application-deployments"
 export TF_DATA_DIR="${DEPLOYMENTS_DIR}/${ENVIRONMENT}/${GIT_REPOSITORY}"
 mkdir -p $TF_DATA_DIR
@@ -51,3 +53,5 @@ else
    terraform apply $PLAN_FILE > $TF_DATA_DIR/apply.log
   fi
 fi
+
+echo "DONE RUNNING IN ENVIRONMENT: $ENVIRONMENT"
