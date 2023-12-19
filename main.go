@@ -4,13 +4,10 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"os"
 	"os/exec"
 )
 
-var TerraformDirectory = "/service/terraform"
 var TerraformStateDirectory = "/service/terraform/remote-state"
-var TerraformDeploymentsDirectory = "/service/application-deployments"
 var TerraformGatewayDirectory = "/service/terraform/internet-gateway"
 
 func main() {
@@ -40,15 +37,8 @@ func main() {
 	}
 
 	// Infrastructure creation
-	planLocation := fmt.Sprintf("%s/tfplan", os.Getenv("WORKING_DATA_DIR"))
-	varFileLocation := fmt.Sprintf("%s/%s", TerraformDeploymentsDirectory, os.Getenv("TF_VAR_FILE_LOCATION"))
-	svgLocation := fmt.Sprintf("%s/graph.svg", os.Getenv("WORKING_DATA_DIR"))
-	backendFileLocation := fmt.Sprintf("%s/%s", TerraformDeploymentsDirectory, os.Getenv("TF_BACKEND_FILE_LOCATION"))
-
 	if *cmdPtr == "status" || *cmdPtr == "create" || *cmdPtr == "destroy" {
-		cmd := exec.Command("/bin/sh", "./scripts/infrastructure.sh",
-			TerraformDirectory, os.Getenv("WORKING_DATA_DIR"),
-			backendFileLocation, planLocation, varFileLocation, svgLocation, *cmdPtr)
+		cmd := exec.Command("/bin/sh", "./scripts/infrastructure.sh", *cmdPtr)
 		out, err := cmd.Output()
 		if err != nil {
 			log.Fatalf("error %s", err)
