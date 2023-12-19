@@ -1,3 +1,5 @@
+#!/bin/sh
+
 cd $1
 
 if [ $2 = "create-backend" ]; then
