@@ -3,7 +3,7 @@ export TF_DATA_DIR=$2
 
 if [ $7 = "destroy" ]; then
   echo "Running destroy ..."
-  terraform apply -destroy -auto-approve -var-file=$5 > destroy.log
+  terraform apply -destroy -auto-approve -var-file=$5 > $2/destroy.log
 else
   echo "Running init and plan ..."
   terraform init -force-copy -backend-config=$3
@@ -16,6 +16,6 @@ else
 
   if [ $7 = "create" ]; then
    echo "Running apply ..."
-   terraform apply $4 > apply.log
+   terraform apply $4 > $2/apply.log
   fi
 fi
