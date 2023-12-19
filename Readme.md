@@ -1,6 +1,8 @@
 ## app-deploy
 
-Deploys an application to the cloud (AWS)
+Deploys an application to the cloud
+
+- AWS
 
 To build:
 
@@ -12,22 +14,25 @@ x86 (64bit):
 
 `docker build --progress=plain -t pennsieve/app-deploy .`
 
-Supported commands:
+To view supported commands: Run `make`
 
-`make`
+## To create infrastructure:
 
 `make create`
 
-Retrieve details from `app_ecr_repository` and `post_processor_ecr_repository` output: 
+Retrieve `app_ecr_repository` and `post_processor_ecr_repository` details from `apply.log` file, in the application-deployments folder: 
 
 `aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName`
 `aws_account_id.dkr.ecr.region.amazonaws.com/postProcessorRepositoryName`
 
 `make deploy ACCOUNT=<aws_account_id> REGION=<region> APP_REPO_NAME=<repositoryName>  AWS_PROFILE=<profile> POST_PROCESSOR_REPO_NAME=<postProcessorRepositoryName> ENTRYPOINT=main.<extension> SOURCE_CODE_REPO=<source_code_repo>`
 
-Also keep track of: `app_gateway_url`
+`extension` - `py` or `R`
+
+Also keep track of: `app_gateway_url`. That URL will be used when you setup the application.
 
 Example source code repositories (SOURCE_CODE_REPO):
 
-- Python - https://github.com/edmore/hackathon-py-example
+- Python - https://github.com/Penn-I3H/python-application-template
+
 
