@@ -36,9 +36,9 @@ delete-route:
 	docker-compose run app-deploy -cmd delete-route	
 
 deploy:
-	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com
+	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
 	@echo "Deploying app"
-	cd $(WORKING_DIR)/terraform/application-wrapper/applications ; git clone ${SOURCE_CODE_REPO} app
+	cd $(WORKING_DIR)/terraform/application-wrapper/applications ; git clone "https://${APP_GIT_REPOSITORY}" app
 	cd $(WORKING_DIR)/terraform/application-wrapper/applications/app
 	cp $(WORKING_DIR)/terraform/application-wrapper/applications/app/${ENTRYPOINT} $(WORKING_DIR)/terraform/application-wrapper/${ENTRYPOINT}
 	cp $(WORKING_DIR)/terraform/application-wrapper/applications/app/Dockerfile $(WORKING_DIR)/terraform/application-wrapper/Dockerfile
@@ -51,10 +51,10 @@ deploy:
     endif
 	rm -rf $(WORKING_DIR)/terraform/application-wrapper/applications/app
 	cd $(WORKING_DIR)/terraform/application-wrapper; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/app-wrapper .
-	docker tag pennsieve/app-wrapper ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${APP_REPO_NAME}
-	docker push ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${APP_REPO_NAME}
+	docker tag pennsieve/app-wrapper ${APP_REPO}
+	docker push ${APP_REPO}
 	@echo "Deploying post processor"
 	cd $(WORKING_DIR)/terraform/post-processor; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/post-processor .
-	docker tag pennsieve/post-processor ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${POST_PROCESSOR_REPO_NAME}
-	docker push ${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${POST_PROCESSOR_REPO_NAME}
+	docker tag pennsieve/post-processor ${POST_PROCESSOR_REPO}
+	docker push ${POST_PROCESSOR_REPO}
 	cd $(WORKING_DIR) ; git clean -f ; git checkout -- .
