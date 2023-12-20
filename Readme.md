@@ -28,6 +28,8 @@ Retrieve `app_ecr_repository` and `post_processor_ecr_repository` details from `
 `aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName`
 `aws_account_id.dkr.ecr.region.amazonaws.com/postProcessorRepositoryName`
 
+## To create infrastructure:
+
 `make deploy ACCOUNT=<aws_account_id> AWS_DEFAULT_REGION=<region> APP_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName AWS_PROFILE=<profile> POST_PROCESSOR_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/postProcessorRepositoryName ENTRYPOINT=main.<extension> APP_GIT_REPOSITORY=<app_git_repository-without-scheme>`
 
 `extension` - `py` or `R`
@@ -37,5 +39,9 @@ Also keep track of: `app_gateway_url`. That URL will be used when you setup the 
 Example source code repositories:
 
 - Python - https://github.com/Penn-I3H/python-application-template (APP_GIT_REPOSITORY is `github.com/Penn-I3H/python-application-template`)
+
+## To create and deploy (one step deployment)
+
+`make create && make deploy ACCOUNT=<aws_account_id> AWS_DEFAULT_REGION=<region> APP_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName AWS_PROFILE=<profile> POST_PROCESSOR_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/postProcessorRepositoryName ENTRYPOINT=main.<extension> APP_GIT_REPOSITORY=<app_git_repository-without-scheme>`
 
 
