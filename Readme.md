@@ -28,7 +28,7 @@ Retrieve `app_ecr_repository` and `post_processor_ecr_repository` details from `
 `aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName`
 `aws_account_id.dkr.ecr.region.amazonaws.com/postProcessorRepositoryName`
 
-## To create infrastructure:
+## To deploy:
 
 `make deploy ACCOUNT=<aws_account_id> AWS_DEFAULT_REGION=<region> APP_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName AWS_PROFILE=<profile> POST_PROCESSOR_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/postProcessorRepositoryName ENTRYPOINT=main.<extension> APP_GIT_REPOSITORY=<app_git_repository-without-scheme>`
 
