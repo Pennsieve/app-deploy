@@ -3,7 +3,7 @@
 echo "RUNNING IN ENVIRONMENT: $ENVIRONMENT"
 
 DEPLOYMENTS_DIR="/service/application-deployments"
-export TF_DATA_DIR="${DEPLOYMENTS_DIR}/${ENVIRONMENT}/${GIT_REPOSITORY}"
+export TF_DATA_DIR="${DEPLOYMENTS_DIR}/${ENVIRONMENT}/${APP_GIT_REPOSITORY}"
 mkdir -p $TF_DATA_DIR
 
 TERRAFORM_DIR="/service/terraform"
@@ -16,7 +16,7 @@ SVG_FILE="$TF_DATA_DIR/graph.svg"
 echo "Creating backend config"
   /bin/cat > "$TF_DATA_DIR/${ENVIRONMENT}.tfbackend" <<EOL
 bucket  = "${TF_REMOTE_BUCKET}"
-key     = "${ENVIRONMENT}/${GIT_REPOSITORY}/terraform.tfstate"
+key     = "${ENVIRONMENT}/${APP_GIT_REPOSITORY}/terraform.tfstate"
 EOL
 
 echo "Creating tfvars config"
@@ -33,6 +33,7 @@ api_key_secret = {
     "${API_KEY}" = "${API_SECRET}"
 }
 environment = "${ENVIRONMENT}"
+app_name = "${APP_GIT_REPOSITORY}"
 EOL
 
 if [ $1 = "destroy" ]; then
