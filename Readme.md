@@ -2,7 +2,7 @@
 
 Deploys an application to the cloud. Supported platforms:
 
-- AWS
+- AWS (prerequisite(s): [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html))
 
 To build:
 
