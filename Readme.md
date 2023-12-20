@@ -18,6 +18,9 @@ To view supported commands: Run `make`
 
 ## To create infrastructure:
 
+- Copy the `application.env.sample` file in the `dev` or `prod` `configs` folders in `application-deployments` to `<applicationName>.env`. Update the file to match your desired application config, and then update the `docker-compose.yml` file to the location of the `<applicationName>.env` file for the application you would like to create/deploy. The `configs` folder is setup such that multiple application configs can stored in that folder, and you can update the `docker-compose.yml` file to point to the config of the deploy application you would like to deploy.
+
+
 `make create`
 
 Retrieve `app_ecr_repository` and `post_processor_ecr_repository` details from `apply.log` file, in the application-deployments folder: 
