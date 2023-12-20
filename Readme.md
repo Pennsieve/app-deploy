@@ -1,6 +1,6 @@
 ## app-deploy
 
-Deploys an application to the cloud
+Deploys an application to the cloud. Supported platforms:
 
 - AWS
 
@@ -28,6 +28,8 @@ Retrieve *app_ecr_repository* and *post_processor_ecr_repository* details from *
 *aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName*
 *aws_account_id.dkr.ecr.region.amazonaws.com/postProcessorRepositoryName*
 
+Also keep track of: *app_gateway_url*. That URL will be used when you update the application in Pennsieve.
+
 ## To deploy:
 
 ```
@@ -35,9 +37,6 @@ make deploy ACCOUNT=<aws_account_id> AWS_DEFAULT_REGION=<region> APP_REPO=aws_ac
 ```
 
 *extension* - py or R
-
-
-Also keep track of: *app_gateway_url*. That URL will be used when you setup the application.
 
 Example source code repositories:
 
