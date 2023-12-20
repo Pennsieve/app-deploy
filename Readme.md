@@ -34,8 +34,8 @@ Retrieve `app_ecr_repository` and `post_processor_ecr_repository` details from `
 
 Also keep track of: `app_gateway_url`. That URL will be used when you setup the application.
 
-Example source code repositories (APP_GIT_REPOSITORY):
+Example source code repositories:
 
-- Python - https://github.com/Penn-I3H/python-application-template
+- Python - https://github.com/Penn-I3H/python-application-template (APP_GIT_REPOSITORY is `github.com/Penn-I3H/python-application-template`)
 
 
