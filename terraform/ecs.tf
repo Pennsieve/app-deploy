@@ -74,7 +74,7 @@ resource "aws_ecs_task_definition" "pipeline" {
   }
 }
 
-// ECS Task definition - pennsieve agent
+// ECS Task definition - post processor
 resource "aws_ecs_task_definition" "post-processor" {
   family                = "post-processor-${random_uuid.val.id}"
   requires_compatibilities = ["FARGATE"]
