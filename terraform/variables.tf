@@ -32,3 +32,15 @@ variable "environment" {
 variable "app_name" {
     type = string
 }
+variable "app_cpu" {
+    type = number
+}
+variable "app_memory" {
+    type = number
+}
+variable "post_processor_cpu" {
+    type = number
+}
+variable "post_processor_memory" {
+    type = number
+}
