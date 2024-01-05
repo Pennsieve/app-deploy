@@ -34,6 +34,10 @@ api_key_secret = {
 }
 environment = "${ENVIRONMENT}"
 app_name = "${APP_GIT_REPOSITORY}"
+app_cpu = "${APP_CPU:-2048}"
+app_memory = "${APP_MEMORY:-4096}"
+post_processor_cpu = "${POST_PROCESSOR_CPU:-2048}"
+post_processor_memory = "${POST_PROCESSOR_MEMORY:-4096}"
 EOL
 
 if [ $1 = "destroy" ]; then

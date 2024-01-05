@@ -29,8 +29,8 @@ resource "aws_ecs_task_definition" "pipeline" {
   family                = "pipeline-${random_uuid.val.id}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 2048
-  memory                   = 4096
+  cpu                      = var.app_cpu
+  memory                   = var.app_memory
   task_role_arn      = aws_iam_role.task_role_for_ecs_task.arn
   execution_role_arn = aws_iam_role.execution_role_for_ecs_task.arn
 
@@ -74,13 +74,13 @@ resource "aws_ecs_task_definition" "pipeline" {
   }
 }
 
-// ECS Task definition - pennsieve agent
+// ECS Task definition - post processor
 resource "aws_ecs_task_definition" "post-processor" {
   family                = "post-processor-${random_uuid.val.id}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = 2048
-  memory                   = 4096
+  cpu                      = var.post_processor_cpu
+  memory                   = var.post_processor_memory
   task_role_arn      = aws_iam_role.task_role_for_post_processor.arn
   execution_role_arn = aws_iam_role.execution_role_for_post_processor.arn
 
