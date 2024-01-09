@@ -32,5 +32,6 @@ RUN apk --no-cache add curl
 # && chmod +x aws-lambda-rie && mv aws-lambda-rie /usr/local/bin/aws-lambda-rie
 
 RUN mkdir /mnt/efs
+RUN mkdir -p /service/logs
 
 ENTRYPOINT [ "/service/bootstrap" ]
