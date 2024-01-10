@@ -109,6 +109,7 @@ func main() {
 	if ok {
 		target_path = fmt.Sprintf("%v", target_path_val)
 	}
+	fmt.Println("target path", target_path)
 
 	// copy files into input directory
 	fmt.Println(payload.Data)
