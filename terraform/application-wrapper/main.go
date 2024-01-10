@@ -104,7 +104,11 @@ func main() {
 	var params map[string]interface{}
 	paramsStr := fmt.Sprintf("%v", integration.Params)
 	json.Unmarshal([]byte(paramsStr), &params)
-	target_path := fmt.Sprintf("%v", params["target_path"])
+	var target_path string
+	target_path_val, ok := params["target_path"]
+	if ok {
+		target_path = fmt.Sprintf("%v", target_path_val)
+	}
 
 	// copy files into input directory
 	fmt.Println(payload.Data)
