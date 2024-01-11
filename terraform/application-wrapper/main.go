@@ -101,9 +101,7 @@ func main() {
 		logger.ErrorContext(context.Background(), err.Error())
 	}
 
-	var params map[string]interface{}
-	paramsStr := fmt.Sprintf("%v", integration.Params)
-	json.Unmarshal([]byte(paramsStr), &params)
+	params := integration.Params.(map[string]interface{})
 	var target_path string
 	target_path_val, ok := params["target_path"]
 	if ok {
