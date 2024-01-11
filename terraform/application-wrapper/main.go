@@ -101,11 +101,14 @@ func main() {
 		logger.ErrorContext(context.Background(), err.Error())
 	}
 
-	params := integration.Params.(map[string]interface{})
 	var target_path string
-	target_path_val, ok := params["target_path"]
-	if ok {
-		target_path = fmt.Sprintf("%v", target_path_val)
+	if integration.Params != nil {
+		params := integration.Params.(map[string]interface{})
+
+		target_path_val, ok := params["target_path"]
+		if ok {
+			target_path = fmt.Sprintf("%v", target_path_val)
+		}
 	}
 	fmt.Println("target path", target_path)
 
