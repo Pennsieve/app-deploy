@@ -101,6 +101,14 @@ func main() {
 		logger.ErrorContext(context.Background(), err.Error())
 	}
 
+	params := integration.Params.(map[string]interface{})
+	var target_path string
+	target_path_val, ok := params["target_path"]
+	if ok {
+		target_path = fmt.Sprintf("%v", target_path_val)
+	}
+	fmt.Println("target path", target_path)
+
 	// copy files into input directory
 	fmt.Println(payload.Data)
 	for _, d := range payload.Data {
@@ -170,6 +178,7 @@ func main() {
 	datasetIDKey := "DATASET_ID"
 	uploadBucketKey := "PENNSIEVE_UPLOAD_BUCKET"
 	environmentKey := "ENVIRONMENT"
+	targetPathKey := "TARGET_PATH"
 
 	log.Println("Initiating post processing Task.")
 	runTaskIn := &ecs.RunTaskInput{
@@ -218,6 +227,10 @@ func main() {
 						{
 							Name:  &environmentKey,
 							Value: &environment,
+						},
+						{
+							Name:  &targetPathKey,
+							Value: &target_path,
 						},
 					},
 				},
