@@ -10,6 +10,9 @@ variable "app_repository" {
 variable "post_processor_repository" {
     type = string
 }
+variable "workflow_manager_repository" {
+    type = string
+}
 variable "api_host" {
     type = string
 }
@@ -42,5 +45,11 @@ variable "post_processor_cpu" {
     type = number
 }
 variable "post_processor_memory" {
+    type = number
+}
+variable "wm_cpu" {
+    type = number
+}
+variable "wm_memory" {
     type = number
 }

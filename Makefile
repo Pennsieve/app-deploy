@@ -57,4 +57,8 @@ deploy:
 	cd $(WORKING_DIR)/terraform/post-processor; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/post-processor .
 	docker tag pennsieve/post-processor ${POST_PROCESSOR_REPO}
 	docker push ${POST_PROCESSOR_REPO}
+	@echo "Deploying workflow manager"
+	cd $(WORKING_DIR)/terraform/workflow-manager; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/workflow-manager .
+	docker tag pennsieve/workflow-manager ${WM_REPO}
+	docker push ${WM_REPO}
 	cd $(WORKING_DIR) ; git clean -f ; git checkout -- .

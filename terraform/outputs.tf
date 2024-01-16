@@ -10,6 +10,12 @@ output "post_processor_ecr_repository" {
   value = aws_ecr_repository.post-processor.repository_url
 }
 
+output "workflow_manager_ecr_repository" {
+  description = "Workflow Manager ECR repository"
+
+  value = aws_ecr_repository.workflow_manager.repository_url
+}
+
 output "app_gateway_url" {
   description = "App Gateway Public URL"
 
