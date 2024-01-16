@@ -22,6 +22,7 @@ def lambda_handler(event, context):
     pennieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
     pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
     environment = os.environ['ENVIRONMENT']
+    workflow_manager_name = os.environ['CONTAINER_NAME_WM']
 
     # gets api key secrets
     secret_name = os.environ['API_KEY_SM_NAME']
@@ -98,7 +99,7 @@ def lambda_handler(event, context):
             overrides={
 	        'containerOverrides': [
 		        {
-		            'name': container_name,
+		            'name': workflow_manager_name,
 			        'environment': [
 				        {
 					        'name': 'INTEGRATION_ID',

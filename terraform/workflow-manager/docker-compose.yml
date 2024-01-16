@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  
+  workflow-manager:
+    env_file:
+      - dev.env
+    image: pennsieve/workflow-manager
+    volumes:
+      - ./workflows:/service/workflows
+    container_name: workflow-manager
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    entrypoint: /service/main
