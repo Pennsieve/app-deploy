@@ -12,6 +12,7 @@ ecs_client = boto3_client("ecs", region_name=os.environ['REGION'])
 def lambda_handler(event, context):
     cluster_name = os.environ['CLUSTER_NAME']
     task_definition_name = os.environ['TASK_DEFINITION_NAME']
+    task_definition_name_wm = os.environ['TASK_DEFINITION_NAME_WM']
     container_name = os.environ['CONTAINER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
     subnet_ids = os.environ['SUBNET_IDS']
@@ -86,7 +87,7 @@ def lambda_handler(event, context):
         response = ecs_client.run_task(
             cluster = cluster_name,
             launchType = 'FARGATE',
-            taskDefinition=task_definition_name,
+            taskDefinition=task_definition_name_wm,
             count = 1,
             platformVersion='LATEST',
             networkConfiguration={
