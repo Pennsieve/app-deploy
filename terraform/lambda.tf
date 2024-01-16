@@ -29,6 +29,7 @@ resource "aws_lambda_function" "application_gateway" {
       PENNSIEVE_UPLOAD_BUCKET=var.pennsieve_upload_bucket
       API_KEY_SM_NAME = aws_secretsmanager_secret.api_key_secret.name
       ENVIRONMENT=var.environment
+      TASK_DEFINITION_NAME_WM = aws_ecs_task_definition.workflow-manager.family
       CONTAINER_NAME_WM = aws_ecs_task_definition.workflow-manager.family
     }
   }
