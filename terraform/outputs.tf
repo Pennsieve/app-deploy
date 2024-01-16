@@ -13,7 +13,7 @@ output "post_processor_ecr_repository" {
 output "workflow_manager_ecr_repository" {
   description = "Workflow Manager ECR repository"
 
-  value = aws_ecr_repository.workflow_manager.repository_url
+  value = aws_ecr_repository.workflow-manager.repository_url
 }
 
 output "app_gateway_url" {
