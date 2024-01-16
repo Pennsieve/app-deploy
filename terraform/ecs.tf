@@ -137,7 +137,7 @@ resource "aws_ecs_task_definition" "workflow-manager" {
   container_definitions = jsonencode([
     {
       name      = "wm-${random_uuid.val.id}"
-      image     = aws_ecr_repository.workflow_manager.repository_url
+      image     = aws_ecr_repository.workflow-manager.repository_url
       essential = true
       portMappings = [
         {
