@@ -18,7 +18,7 @@ ENV PATH="${PATH}:/usr/local/"
 RUN rm -f /service/nextflow
 
 # set desired nextflow version
-RUN export NXF_VER=23.04.1
+RUN export NXF_VER=23.10.0
 
 COPY . .
 
