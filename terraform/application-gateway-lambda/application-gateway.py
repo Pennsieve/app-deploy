@@ -111,6 +111,14 @@ def lambda_handler(event, context):
 					        'value': '/mnt/efs'
 				        },
                         {
+					        'name': 'TASK_DEFINITION_NAME',
+					        'value': task_definition_name
+				        },
+                        {
+					        'name': 'CONTAINER_NAME',
+					        'value': container_name
+				        }, 
+                        {
 					        'name': 'TASK_DEFINITION_NAME_POST',
 					        'value': task_definition_name_post
 				        },
