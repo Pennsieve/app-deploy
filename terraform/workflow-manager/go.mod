@@ -1,4 +1,4 @@
-module edmore/application-iac
+module github.com/pennsieve/workflow-manager
 
 go 1.21.3
 

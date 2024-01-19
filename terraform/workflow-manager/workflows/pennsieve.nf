@@ -25,7 +25,9 @@ process Pipeline {
 
     script:
     """
-    echo "running pipeline"
+    echo "running pipeline\n"
+    echo "integration ID: $INTEGRATION_ID\n"
+    go run /service/taskRunner/main.go
     """
 }
 

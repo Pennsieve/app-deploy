@@ -1,4 +1,4 @@
-module edmore/application-iac
+module github.com/pennsieve/task-runner
 
 go 1.21.3
 
