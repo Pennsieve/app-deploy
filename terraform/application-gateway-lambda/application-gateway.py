@@ -169,7 +169,11 @@ def lambda_handler(event, context):
                         {
 					        'name': 'ENVIRONMENT',
 					        'value': environment
-				        },                   
+				        },
+                        {
+					        'name': 'REGION',
+					        'value': region_name
+				        },               
                         
 			     ],
 		        },

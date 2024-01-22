@@ -27,7 +27,7 @@ process Pipeline {
     """
     echo "running pipeline\n"
     echo "integration ID: $INTEGRATION_ID\n"
-    go run /service/taskRunner/main.go
+    python3.9 /service/taskRunner/main.py TaskRunner
     """
 }
 
