@@ -82,7 +82,7 @@ def main():
 				        },
                         {
 					        'name': 'REGION',
-					        'value': region_name
+					        'value': os.environ['REGION']
 				        },               
                         
 			     ],
