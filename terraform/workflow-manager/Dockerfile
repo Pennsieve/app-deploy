@@ -20,6 +20,11 @@ RUN rm -f /service/nextflow
 # set desired nextflow version
 RUN export NXF_VER=23.10.0
 
+RUN apt-get clean
+RUN apt-get -y install software-properties-common && add-apt-repository ppa:deadsnakes/ppa
+RUN apt-get update & apt-get -y install python3.9
+RUN python3.9 --version
+
 COPY . .
 
 RUN ls /service
@@ -29,5 +34,9 @@ RUN ls /service/taskRunner
 RUN go build -o /service/main main.go
 
 RUN mkdir -p workflows
+
+
+RUN apt-get -y install python3-pip
+RUN pip install -r /service/taskRunner/requirements.txt
 
 ENTRYPOINT [ "/service/main" ]
