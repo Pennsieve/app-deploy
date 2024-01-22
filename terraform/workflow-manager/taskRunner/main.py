@@ -91,13 +91,13 @@ def main():
         })
         task_arn = response['tasks'][0]['taskArn']
 
-        waiter = ecs_client.get_waiter('tasks_running')
+        waiter = ecs_client.get_waiter('tasks_stopped')
         waiter.wait(
             cluster=cluster_name,
             tasks=[task_arn],
         )
 
-        print('Fargate Task is running')
+        print('Fargate Task has stopped')
 
 
 # Standard boilerplate to call the main() function to begin
