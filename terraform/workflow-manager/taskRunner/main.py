@@ -89,11 +89,15 @@ def main():
 		        },
 	        ],
         })
-        print("Fargate task started")
-        return {
-            'statusCode': 202,
-            'body': json.dumps(str(response))
-        }
+        task_arn = response['tasks'][0]
+
+        waiter = ecs_client.get_waiter('tasks_running')
+        waiter.wait(
+            cluster=cluster_name,
+            tasks=[task_arn],
+        )
+
+        print('Fargate Task is running')
 
 
 # Standard boilerplate to call the main() function to begin
