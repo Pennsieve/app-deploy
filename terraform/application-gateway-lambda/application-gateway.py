@@ -20,7 +20,7 @@ def lambda_handler(event, context):
     container_name_post = os.environ['CONTAINER_NAME_POST']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
-    pennieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
+    pennsieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
     pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
     environment = os.environ['ENVIRONMENT']
     workflow_manager_name = os.environ['CONTAINER_NAME_WM']
@@ -144,7 +144,7 @@ def lambda_handler(event, context):
 				        },
                         {
 					        'name': 'PENNSIEVE_AGENT_HOME',
-					        'value': pennieve_agent_home
+					        'value': pennsieve_agent_home
 				        },
                         {
 					        'name': 'PENNSIEVE_UPLOAD_BUCKET',

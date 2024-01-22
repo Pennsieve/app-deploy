@@ -12,19 +12,20 @@ ecs_client = boto3_client("ecs", region_name=os.environ['REGION'])
 def main():
     print('Hello there', sys.argv[1])
 
-    task_definition_name = os.environ['TASK_DEFINITION_NAME']
+    task_definition_name = os.environ['TASK_DEFINITION_NAME_POST']
     subnet_ids = os.environ['SUBNET_IDS']
     cluster_name = os.environ['CLUSTER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
-    container_name = os.environ['CONTAINER_NAME']
+    container_name = os.environ['CONTAINER_NAME_POST']
     api_key = os.environ['PENNSIEVE_API_KEY']
     api_secret = os.environ['PENNSIEVE_API_SECRET']
+    pennsieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
+    pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
     environment = os.environ['ENVIRONMENT']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
     integration_id = os.environ['INTEGRATION_ID']
-    base_dir = os.environ['BASE_DIR']
-    session_token = os.environ['SESSION_TOKEN']
+    session_token = os.environ['SESSION_TOKEN'] # should get new session token now that an orchestrator calls the post processor
 
     # start Fargate task
     if cluster_name != "":
@@ -60,9 +61,13 @@ def main():
 					        'value': api_secret
 				        },
                         {
-					        'name': 'BASE_DIR',
-					        'value': base_dir
+					        'name': 'PENNSIEVE_AGENT_HOME',
+					        'value': pennsieve_agent_home
 				        },
+                        {
+					        'name': 'PENNSIEVE_UPLOAD_BUCKET',
+					        'value': pennsieve_upload_bucket
+				        }, 
                         {
 					        'name': 'PENNSIEVE_API_HOST',
 					        'value': pennsieve_host

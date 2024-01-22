@@ -13,10 +13,6 @@ import (
 
 	"log/slog"
 
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/ecs"
-	"github.com/aws/aws-sdk-go-v2/service/ecs/types"
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/google/uuid"
 )
 
@@ -90,7 +86,6 @@ func main() {
 	}
 	fmt.Println(integration)
 
-	datasetID := integration.DatasetNodeID
 	manifest, err := getPresignedUrls(apiHost, getPackageIds(integration.PackageIDs), sessionToken)
 	if err != nil {
 		log.Fatalln(err)
@@ -100,17 +95,6 @@ func main() {
 	if err := json.Unmarshal(manifest, &payload); err != nil {
 		logger.ErrorContext(context.Background(), err.Error())
 	}
-
-	var target_path string
-	if integration.Params != nil {
-		params := integration.Params.(map[string]interface{})
-
-		target_path_val, ok := params["target_path"]
-		if ok {
-			target_path = fmt.Sprintf("%v", target_path_val)
-		}
-	}
-	fmt.Println("target path", target_path)
 
 	// copy files into input directory
 	fmt.Println(payload.Data)
@@ -153,99 +137,6 @@ func main() {
 			slog.String("error", stderr2.String()))
 	}
 	log.Println(out2.String())
-
-	// invoke post-processor
-	TaskDefinitionArn := os.Getenv("TASK_DEFINITION_NAME_POST")
-	subIdStr := os.Getenv("SUBNET_IDS")
-	SubNetIds := strings.Split(subIdStr, ",")
-	cluster := os.Getenv("CLUSTER_NAME")
-	SecurityGroup := os.Getenv("SECURITY_GROUP_ID")
-	TaskDefContainerName := os.Getenv("CONTAINER_NAME_POST")
-	apiKey := os.Getenv("PENNSIEVE_API_KEY")
-	apiSecret := os.Getenv("PENNSIEVE_API_SECRET")
-	agentHome := os.Getenv("PENNSIEVE_AGENT_HOME")
-	upload_bucket := os.Getenv("PENNSIEVE_UPLOAD_BUCKET")
-	environment := os.Getenv("ENVIRONMENT")
-
-	cfg, err := config.LoadDefaultConfig(context.Background())
-	if err != nil {
-		log.Fatalf("LoadDefaultConfig: %v\n", err)
-	}
-
-	client := ecs.NewFromConfig(cfg)
-	apiKeyKey := "PENNSIEVE_API_KEY"
-	apiSecretKey := "PENNSIEVE_API_SECRET"
-	apihostKey := "PENNSIEVE_API_HOST"
-	agentHomeKey := "PENNSIEVE_AGENT_HOME"
-	integrationIDKey := "INTEGRATION_ID"
-	datasetIDKey := "DATASET_ID"
-	uploadBucketKey := "PENNSIEVE_UPLOAD_BUCKET"
-	environmentKey := "ENVIRONMENT"
-	targetPathKey := "TARGET_PATH"
-
-	log.Println("Initiating post processing Task.")
-	runTaskIn := &ecs.RunTaskInput{
-		TaskDefinition: aws.String(TaskDefinitionArn),
-		Cluster:        aws.String(cluster),
-		NetworkConfiguration: &types.NetworkConfiguration{
-			AwsvpcConfiguration: &types.AwsVpcConfiguration{
-				Subnets:        SubNetIds,
-				SecurityGroups: []string{SecurityGroup},
-				AssignPublicIp: types.AssignPublicIpEnabled,
-			},
-		},
-		Overrides: &types.TaskOverride{
-			ContainerOverrides: []types.ContainerOverride{
-				{
-					Name: &TaskDefContainerName,
-					Environment: []types.KeyValuePair{
-						{
-							Name:  &apiKeyKey,
-							Value: &apiKey,
-						},
-						{
-							Name:  &apiSecretKey,
-							Value: &apiSecret,
-						},
-						{
-							Name:  &apihostKey,
-							Value: &apiHost,
-						},
-						{
-							Name:  &agentHomeKey,
-							Value: &agentHome,
-						},
-						{
-							Name:  &integrationIDKey,
-							Value: &integrationID,
-						},
-						{
-							Name:  &datasetIDKey,
-							Value: &datasetID,
-						},
-						{
-							Name:  &uploadBucketKey,
-							Value: &upload_bucket,
-						},
-						{
-							Name:  &environmentKey,
-							Value: &environment,
-						},
-						{
-							Name:  &targetPathKey,
-							Value: &target_path,
-						},
-					},
-				},
-			},
-		},
-		LaunchType: types.LaunchTypeFargate,
-	}
-
-	_, err = client.RunTask(context.Background(), runTaskIn)
-	if err != nil {
-		log.Fatalf("error running task: %v\n", err)
-	}
 
 	logger.Info("Processing complete")
 }
