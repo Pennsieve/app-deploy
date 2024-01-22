@@ -89,7 +89,7 @@ def main():
 		        },
 	        ],
         })
-        task_arn = response['tasks'][0]
+        task_arn = response['tasks'][0]['taskArn']
 
         waiter = ecs_client.get_waiter('tasks_running')
         waiter.wait(
