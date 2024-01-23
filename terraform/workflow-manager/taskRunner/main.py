@@ -10,7 +10,7 @@ ecs_client = boto3_client("ecs", region_name=os.environ['REGION'])
 
 # Gather our code in a main() function
 def main():
-    print('Hello there', sys.argv[1])
+    print('running task runner for integrationID', sys.argv[1])
 
     task_definition_name = os.environ['TASK_DEFINITION_NAME']
     subnet_ids = os.environ['SUBNET_IDS']
