@@ -5,67 +5,76 @@ log.info """\
     WORKFLOW MANAGER
     ===================================
     """
-    .stripIndent()
+    .stripIndent(true)
 
-params.greeting = 'Main'
-greeting_ch = Channel.of(params.greeting) 
+params.inputDir = "$BASE_DIR/input/$INTEGRATION_ID"
+params.outputDir = "$BASE_DIR/output/$INTEGRATION_ID"
 
 process PreProcessor {
     debug true
     
     input:
-    val x
-    output: stdout
+        val x
+        val y
+    output:
+        stdout
 
     script:
-    """
-    echo $x
-    """
+    if ("$ENVIRONMENT" != 'LOCAL')
+        """
+        echo "NOT_LOCAL"
+        """
+    else
+        """
+        echo "running pre-processor\n"
+        echo "Running pre-processor: using input $x, and output $y"
+        """
 }
 
 process Pipeline {
     debug true
     
-    input: 
-    val y
+    input:
+        val pre_output
     output: stdout
 
     script:
     if ("$ENVIRONMENT" != 'LOCAL')
         """
-        echo "running pipeline\n"
-        echo "integration ID: $INTEGRATION_ID\n"
-        python3.9 /service/taskRunner/main.py '$y'
+        python3.9 /service/taskRunner/main.py $INTEGRATION_ID
         """
     else
         """
         echo "running pipeline\n"
-        echo "integration ID: $INTEGRATION_ID\n"
+        echo "pre-output is: $pre_output"
         """
 }
 
 process PostProcessor {
     debug true
+
     input:
-    val z
+        val pipeline_output
     output: stdout
 
     script:
         if ("$ENVIRONMENT" != 'LOCAL')
         """
-        echo "running post-processor\n"
-        python3.9 /service/taskRunner/post_processor.py Post-Processor
+        python3.9 /service/taskRunner/post_processor.py $INTEGRATION_ID
         """
     else
         """
         echo "running post-processor\n"
+        echo "pipeline_output is: $pipeline_output"
         """
-
 }
 
 workflow {
-    pre_processor_ch = PreProcessor(greeting_ch)
-    pipeline_ch = Pipeline(pre_processor_ch)
+    input_ch = Channel.of(params.inputDir)
+    output_ch = Channel.of(params.outputDir)
+
+    pre_ch = PreProcessor(input_ch, output_ch)
+    pipeline_ch = Pipeline(pre_ch)
     PostProcessor(pipeline_ch)
 }
 
