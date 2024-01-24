@@ -7,6 +7,9 @@ variable "az" {
 variable "app_repository" {
     type = string
 }
+variable "pre_processor_repository" {
+    type = string
+}
 variable "post_processor_repository" {
     type = string
 }
