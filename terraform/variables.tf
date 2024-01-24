@@ -41,6 +41,12 @@ variable "app_cpu" {
 variable "app_memory" {
     type = number
 }
+variable "pre_processor_cpu" {
+    type = number
+}
+variable "pre_processor_memory" {
+    type = number
+}
 variable "post_processor_cpu" {
     type = number
 }

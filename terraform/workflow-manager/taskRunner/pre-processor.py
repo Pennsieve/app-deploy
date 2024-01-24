@@ -10,12 +10,13 @@ ecs_client = boto3_client("ecs", region_name=os.environ['REGION'])
 
 # Gather our code in a main() function
 def main():
+    print('running task runner for integrationID', sys.argv[1])
 
-    task_definition_name = os.environ['TASK_DEFINITION_NAME']
+    task_definition_name = os.environ['TASK_DEFINITION_NAME_PRE']
     subnet_ids = os.environ['SUBNET_IDS']
     cluster_name = os.environ['CLUSTER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
-    container_name = os.environ['CONTAINER_NAME']
+    container_name = os.environ['CONTAINER_NAME_PRE']
     api_key = os.environ['PENNSIEVE_API_KEY']
     api_secret = os.environ['PENNSIEVE_API_SECRET']
     environment = os.environ['ENVIRONMENT']
@@ -24,8 +25,6 @@ def main():
     integration_id = os.environ['INTEGRATION_ID']
     base_dir = os.environ['BASE_DIR']
     session_token = os.environ['SESSION_TOKEN']
-    inputDir = sys.argv[1]
-    outputDir = sys.argv[2]
 
     # start Fargate task
     if cluster_name != "":
@@ -83,15 +82,7 @@ def main():
                         {
 					        'name': 'REGION',
 					        'value': os.environ['REGION']
-				        },
-                        {
-					        'name': 'INPUT_DIR',
-					        'value': inputDir
-				        },
-                        {
-					        'name': 'OUTPUT_DIR',
-					        'value': outputDir
-				        },             
+				        },               
                         
 			     ],
 		        },

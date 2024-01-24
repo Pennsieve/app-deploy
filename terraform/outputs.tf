@@ -4,6 +4,12 @@ output "app_ecr_repository" {
   value = aws_ecr_repository.app.repository_url
 }
 
+output "pre_processor_ecr_repository" {
+  description = "Pre Processor ECR repository"
+
+  value = aws_ecr_repository.pre-processor.repository_url
+}
+
 output "post_processor_ecr_repository" {
   description = "Post Processor ECR repository"
 

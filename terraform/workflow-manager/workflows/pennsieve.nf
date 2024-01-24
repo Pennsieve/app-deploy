@@ -22,7 +22,7 @@ process PreProcessor {
     script:
     if ("$ENVIRONMENT" != 'LOCAL')
         """
-        echo "NOT_LOCAL"
+        python3.9 /service/taskRunner/pre-processor.py $INTEGRATION_ID
         """
     else
         """
@@ -36,17 +36,21 @@ process Pipeline {
     
     input:
         val pre_output
+        val inputDir
+        val outputDir
     output: stdout
 
     script:
     if ("$ENVIRONMENT" != 'LOCAL')
         """
-        python3.9 /service/taskRunner/main.py $INTEGRATION_ID
+        python3.9 /service/taskRunner/main.py $inputDir $outputDir
         """
     else
         """
         echo "running pipeline\n"
         echo "pre-output is: $pre_output"
+        echo "inputDir is: $inputDir"
+        echo "outputDir is: $outputDir"
         """
 }
 
@@ -55,17 +59,19 @@ process PostProcessor {
 
     input:
         val pipeline_output
+        val outputDir
     output: stdout
 
     script:
         if ("$ENVIRONMENT" != 'LOCAL')
         """
-        python3.9 /service/taskRunner/post_processor.py $INTEGRATION_ID
+        python3.9 /service/taskRunner/post_processor.py $outputDir
         """
     else
         """
         echo "running post-processor\n"
         echo "pipeline_output is: $pipeline_output"
+        echo "outputDir is: $outputDir"
         """
 }
 
@@ -74,8 +80,8 @@ workflow {
     output_ch = Channel.of(params.outputDir)
 
     pre_ch = PreProcessor(input_ch, output_ch)
-    pipeline_ch = Pipeline(pre_ch)
-    PostProcessor(pipeline_ch)
+    pipeline_ch = Pipeline(pre_ch, input_ch, output_ch)
+    PostProcessor(pipeline_ch, output_ch)
 }
 
 workflow.onComplete {
