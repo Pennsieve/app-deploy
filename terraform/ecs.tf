@@ -173,3 +173,53 @@ resource "aws_ecs_task_definition" "workflow-manager" {
     }
   }
 }
+
+// ECS Task definition - pre processor
+resource "aws_ecs_task_definition" "pre-processor" {
+  family                = "pre-processor-${random_uuid.val.id}"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = var.pre_processor_cpu
+  memory                   = var.pre_processor_memory
+  task_role_arn      = aws_iam_role.task_role_for_pre_processor.arn
+  execution_role_arn = aws_iam_role.execution_role_for_pre_processor.arn
+
+  container_definitions = jsonencode([
+    {
+      name      = "pre-processor-${random_uuid.val.id}"
+      image     = aws_ecr_repository.pre-processor.repository_url
+      essential = true
+      portMappings = [
+        {
+          containerPort = 8081
+          hostPort      = 8081
+        }
+      ]
+      mountPoints = [
+        {
+          sourceVolume = "pre-storage-${random_uuid.val.id}"
+          containerPath = "/mnt/efs"
+          readOnly = false
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group = "/ecs/pre-processor/${random_uuid.val.id}"
+          awslogs-region = var.region
+          awslogs-stream-prefix = "ecs"
+          awslogs-create-group = "true"
+        }
+      }
+    }
+  ])
+
+  volume {
+    name = "pre-storage-${random_uuid.val.id}"
+
+    efs_volume_configuration {
+      file_system_id          = aws_efs_file_system.pipeline.id
+      root_directory          = "/"
+    }
+  }
+}

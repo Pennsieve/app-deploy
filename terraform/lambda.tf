@@ -21,6 +21,8 @@ resource "aws_lambda_function" "application_gateway" {
       CONTAINER_NAME = aws_ecs_task_definition.pipeline.family # currently same as name of task definition
       SUBNET_IDS = local.subnet_ids
       SECURITY_GROUP_ID = aws_default_security_group.default.id
+      TASK_DEFINITION_NAME_PRE = aws_ecs_task_definition.pre-processor.family
+      CONTAINER_NAME_PRE = aws_ecs_task_definition.pre-processor.family
       TASK_DEFINITION_NAME_POST = aws_ecs_task_definition.post-processor.family
       CONTAINER_NAME_POST = aws_ecs_task_definition.post-processor.family
       PENNSIEVE_API_HOST = var.api_host

@@ -9,7 +9,6 @@ log.info """\
     execution_script        : ${params.execution_script}
     outputdir               : ${params.outputDir}
     inputdir                : ${params.inputDir}
-    integrationID           : ${params.integrationID}
     """
     .stripIndent()
 

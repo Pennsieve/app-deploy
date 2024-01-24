@@ -162,3 +162,18 @@ resource "aws_iam_role" "execution_role_for_post_processor" {
   assume_role_policy = data.aws_iam_policy_document.ecs_execution_role_assume_role.json
   managed_policy_arns = [aws_iam_policy.ecs_execution_role_policy.arn]
 }
+
+// ## Pre Processor ##
+// ECS Pre processor task IAM role
+resource "aws_iam_role" "task_role_for_pre_processor" {
+  name               = "pre_task_role-${random_uuid.val.id}"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_role_assume_role.json
+  managed_policy_arns = [aws_iam_policy.efs_policy.arn]
+}
+
+// ECS Execution IAM role
+resource "aws_iam_role" "execution_role_for_pre_processor" {
+  name               = "pre_iam_role-${random_uuid.val.id}"
+  assume_role_policy = data.aws_iam_policy_document.ecs_execution_role_assume_role.json
+  managed_policy_arns = [aws_iam_policy.ecs_execution_role_policy.arn]
+}
