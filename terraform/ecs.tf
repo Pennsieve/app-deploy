@@ -223,3 +223,12 @@ resource "aws_ecs_task_definition" "pre-processor" {
     }
   }
 }
+
+resource "aws_ecs_service" "workflow-manager" {
+  name            = "wm-${random_uuid.val.id}"
+  cluster         = aws_ecs_cluster.pipeline_cluster.id
+  task_definition = aws_ecs_task_definition.workflow-manager.arn
+  launch_type = "FARGATE"
+  desired_count = 1
+
+}
