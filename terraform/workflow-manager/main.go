@@ -12,7 +12,6 @@ import (
 	"syscall"
 
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 )
 
@@ -72,7 +71,7 @@ type MsgType struct {
 	Message string `json:"message"`
 }
 
-func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string, ddbSvc *dynamodb.Client, tableName string) (bool, error) {
+func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string) (bool, error) {
 	input := &sqs.ReceiveMessageInput{
 		QueueUrl:            &queueUrl,
 		MaxNumberOfMessages: 1,
