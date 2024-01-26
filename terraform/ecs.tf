@@ -138,6 +138,10 @@ resource "aws_ecs_task_definition" "workflow-manager" {
     {
       name      = "wm-${random_uuid.val.id}"
       image     = aws_ecr_repository.workflow-manager.repository_url
+      environment: [
+      {
+        name: "SQS_URL", value: aws_sqs_queue.terraform_queue.id}
+      ],
       essential = true
       portMappings = [
         {
@@ -229,6 +233,7 @@ resource "aws_ecs_service" "workflow-manager" {
   cluster         = aws_ecs_cluster.pipeline_cluster.id
   task_definition = aws_ecs_task_definition.workflow-manager.arn
   launch_type = "FARGATE"
+  desired_count = 1
 
   network_configuration {
     subnets = local.subnet_ids_list
