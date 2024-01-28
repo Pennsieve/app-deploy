@@ -7,8 +7,8 @@ log.info """\
     """
     .stripIndent(true)
 
-params.inputDir = "$BASE_DIR/input/$INTEGRATION_ID"
-params.outputDir = "$BASE_DIR/output/$INTEGRATION_ID"
+params.inputDir = "$BASE_DIR/input/${params.integrationID}"
+params.outputDir = "$BASE_DIR/output/${params.integrationID}"
 
 process PreProcessor {
     debug true
@@ -22,7 +22,7 @@ process PreProcessor {
     script:
     if ("$ENVIRONMENT" != 'LOCAL')
         """
-        python3.9 /service/taskRunner/pre-processor.py $INTEGRATION_ID
+        python3.9 /service/taskRunner/pre-processor.py ${params.integrationID}
         """
     else
         """
