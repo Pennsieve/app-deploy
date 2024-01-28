@@ -124,60 +124,6 @@ resource "aws_ecs_task_definition" "post-processor" {
   }
 }
 
-// ECS Task definition - workflow manager
-resource "aws_ecs_task_definition" "workflow-manager" {
-  family                = "wm-${random_uuid.val.id}"
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  cpu                      = var.wm_cpu
-  memory                   = var.wm_memory
-  task_role_arn      = aws_iam_role.task_role_for_ecs_task.arn
-  execution_role_arn = aws_iam_role.execution_role_for_ecs_task.arn
-
-  container_definitions = jsonencode([
-    {
-      name      = "wm-${random_uuid.val.id}"
-      image     = aws_ecr_repository.workflow-manager.repository_url
-      environment: [
-      {
-        name: "SQS_URL", value: aws_sqs_queue.terraform_queue.id}
-      ],
-      essential = true
-      portMappings = [
-        {
-          containerPort = 8081
-          hostPort      = 8081
-        }
-      ]
-      mountPoints = [
-        {
-          sourceVolume = "wm-storage-${random_uuid.val.id}"
-          containerPath = "/mnt/efs"
-          readOnly = false
-        }
-      ]
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-group = "/ecs/wm/${random_uuid.val.id}"
-          awslogs-region = var.region
-          awslogs-stream-prefix = "ecs"
-          awslogs-create-group = "true"
-        }
-      }
-    }
-  ])
-
-  volume {
-    name = "wm-storage-${random_uuid.val.id}"
-
-    efs_volume_configuration {
-      file_system_id          = aws_efs_file_system.pipeline.id
-      root_directory          = "/"
-    }
-  }
-}
-
 // ECS Task definition - pre processor
 resource "aws_ecs_task_definition" "pre-processor" {
   family                = "pre-processor-${random_uuid.val.id}"
@@ -220,6 +166,72 @@ resource "aws_ecs_task_definition" "pre-processor" {
 
   volume {
     name = "pre-storage-${random_uuid.val.id}"
+
+    efs_volume_configuration {
+      file_system_id          = aws_efs_file_system.pipeline.id
+      root_directory          = "/"
+    }
+  }
+}
+
+// ECS Task definition - workflow manager
+resource "aws_ecs_task_definition" "workflow-manager" {
+  family                = "wm-${random_uuid.val.id}"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = var.wm_cpu
+  memory                   = var.wm_memory
+  task_role_arn      = aws_iam_role.task_role_for_ecs_task.arn
+  execution_role_arn = aws_iam_role.execution_role_for_ecs_task.arn
+
+  container_definitions = jsonencode([
+    {
+      name      = "wm-${random_uuid.val.id}"
+      image     = aws_ecr_repository.workflow-manager.repository_url
+      environment: [
+      {name: "SQS_URL", value: aws_sqs_queue.terraform_queue.id},
+      { name: "TASK_DEFINITION_NAME_PRE", value: aws_ecs_task_definition.pre-processor.family},
+      { name: "CONTAINER_NAME_PRE", value: aws_ecs_task_definition.pre-processor.family},
+      { name: "TASK_DEFINITION_NAME_POST", value: aws_ecs_task_definition.post-processor.family},
+      { name: "CONTAINER_NAME_POST", value: aws_ecs_task_definition.post-processor.family},
+      { name: "PENNSIEVE_AGENT_HOME", value: var.pennsieve_agent_home},
+      { name: "PENNSIEVE_UPLOAD_BUCKET", value: var.pennsieve_upload_bucket},
+      { name: "SUBNET_IDS", value: local.subnet_ids},
+      { name: "CLUSTER_NAME", value: aws_ecs_cluster.pipeline_cluster.name},
+      { name: "SECURITY_GROUP_ID", value: aws_default_security_group.default.id},
+      { name: "ENVIRONMENT", value: var.environment},
+      { name: "PENNSIEVE_API_HOST", value: var.api_host},
+      { name: "PENNSIEVE_API_HOST", value: var.api_host2},
+      { name: "BASE_DIR", value: "/mnt/efs"},
+      ],
+      essential = true
+      portMappings = [
+        {
+          containerPort = 8081
+          hostPort      = 8081
+        }
+      ]
+      mountPoints = [
+        {
+          sourceVolume = "wm-storage-${random_uuid.val.id}"
+          containerPath = "/mnt/efs"
+          readOnly = false
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group = "/ecs/wm/${random_uuid.val.id}"
+          awslogs-region = var.region
+          awslogs-stream-prefix = "ecs"
+          awslogs-create-group = "true"
+        }
+      }
+    }
+  ])
+
+  volume {
+    name = "wm-storage-${random_uuid.val.id}"
 
     efs_volume_configuration {
       file_system_id          = aws_efs_file_system.pipeline.id
