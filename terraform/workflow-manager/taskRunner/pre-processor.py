@@ -17,14 +17,14 @@ def main():
     cluster_name = os.environ['CLUSTER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
     container_name = os.environ['CONTAINER_NAME_PRE']
-    api_key = os.environ['PENNSIEVE_API_KEY']
-    api_secret = os.environ['PENNSIEVE_API_SECRET']
+    api_key = os.environ['PENNSIEVE_API_KEY'] # pass from gateway, differ per app
+    api_secret = os.environ['PENNSIEVE_API_SECRET'] # pass from gateway
     environment = os.environ['ENVIRONMENT']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
-    integration_id = os.environ['INTEGRATION_ID']
+    integration_id = os.environ['INTEGRATION_ID'] # pass from gateway
     base_dir = os.environ['BASE_DIR']
-    session_token = os.environ['SESSION_TOKEN']
+    session_token = os.environ['SESSION_TOKEN'] # pass from gateway
 
     # start Fargate task
     if cluster_name != "":
