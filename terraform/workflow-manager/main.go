@@ -8,7 +8,9 @@ import (
 	"log"
 	"log/slog"
 	"os"
+	"os/exec"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -51,7 +53,7 @@ loop:
 			cancel() //cancel context
 
 		default:
-			_, err := processSQS(ctx, sqsSvc, queueUrl)
+			_, err := processSQS(ctx, sqsSvc, queueUrl, logger)
 
 			if err != nil {
 				if errors.Is(err, context.Canceled) {
@@ -71,7 +73,7 @@ type MsgType struct {
 	Message string `json:"message"`
 }
 
-func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string) (bool, error) {
+func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string, logger *slog.Logger) (bool, error) {
 	input := &sqs.ReceiveMessageInput{
 		QueueUrl:            &queueUrl,
 		MaxNumberOfMessages: 1,
@@ -101,7 +103,18 @@ func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string) (bool,
 
 		log.Printf("message id %s is received from SQS: %#v", id, newMsg.Message)
 
-		// Do stuff with message
+		// run pipeline
+		cmd := exec.Command("nextflow", "run", "./workflows/pennsieve.nf", "-ansi-log", "false")
+		cmd.Dir = "/service"
+		var stdout strings.Builder
+		var stderr strings.Builder
+		cmd.Stdout = &stdout
+		cmd.Stderr = &stderr
+		if err := cmd.Run(); err != nil {
+			logger.Error(err.Error(),
+				slog.String("error", stderr.String()))
+		}
+		log.Println(stdout.String())
 
 		_, err = sqsSvc.DeleteMessage(ctx, &sqs.DeleteMessageInput{
 			QueueUrl:      &queueUrl,
