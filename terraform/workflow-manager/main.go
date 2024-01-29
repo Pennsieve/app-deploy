@@ -15,6 +15,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
+	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 )
 
 const (
@@ -79,7 +80,7 @@ type MsgType struct {
 func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string, logger *slog.Logger) (bool, error) {
 	input := &sqs.ReceiveMessageInput{
 		QueueUrl:            &queueUrl,
-		MaxNumberOfMessages: 5,
+		MaxNumberOfMessages: 1,
 		VisibilityTimeout:   visibilityTimeout,
 		WaitTimeSeconds:     waitingTimeout, // use long polling
 	}
@@ -106,32 +107,34 @@ func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string, logger
 
 		log.Printf("message id %s is received from SQS: %#v", id, newMsg.IntegrationID)
 
-		// run pipeline
-		cmd := exec.Command("nextflow", "run", "./workflows/pennsieve.nf", "-ansi-log", "false",
-			"--integrationID", newMsg.IntegrationID,
-			"--apiKey", newMsg.ApiKey,
-			"--apiSecret", newMsg.ApiSecret,
-			"--sessionToken", newMsg.SessionToken)
-		cmd.Dir = "/service"
-		var stdout strings.Builder
-		var stderr strings.Builder
-		cmd.Stdout = &stdout
-		cmd.Stderr = &stderr
-		if err := cmd.Run(); err != nil {
-			logger.Error(err.Error(),
-				slog.String("error", stderr.String()))
-		}
-		log.Println(stdout.String())
+		go func(msg types.Message) {
+			// run pipeline
+			cmd := exec.Command("nextflow", "run", "./workflows/pennsieve.nf", "-ansi-log", "false",
+				"--integrationID", newMsg.IntegrationID,
+				"--apiKey", newMsg.ApiKey,
+				"--apiSecret", newMsg.ApiSecret,
+				"--sessionToken", newMsg.SessionToken)
+			cmd.Dir = "/service"
+			var stdout strings.Builder
+			var stderr strings.Builder
+			cmd.Stdout = &stdout
+			cmd.Stderr = &stderr
+			if err := cmd.Run(); err != nil {
+				logger.Error(err.Error(),
+					slog.String("error", stderr.String()))
+			}
+			log.Println(stdout.String())
 
-		_, err = sqsSvc.DeleteMessage(ctx, &sqs.DeleteMessageInput{
-			QueueUrl:      &queueUrl,
-			ReceiptHandle: msg.ReceiptHandle,
-		})
+			_, err = sqsSvc.DeleteMessage(ctx, &sqs.DeleteMessageInput{
+				QueueUrl:      &queueUrl,
+				ReceiptHandle: msg.ReceiptHandle,
+			})
 
-		if err != nil {
-			return false, fmt.Errorf("error deleting message from SQS %w", err)
-		}
-		log.Printf("message id %s is deleted from queue", id)
+			if err != nil {
+				logger.Error("error deleting message from SQS %w", err)
+			}
+			log.Printf("message id %s is deleted from queue", id)
+		}(msg)
 
 	}
 	return true, nil
