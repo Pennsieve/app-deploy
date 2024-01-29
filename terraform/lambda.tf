@@ -18,7 +18,7 @@ resource "aws_lambda_function" "application_gateway" {
       REGION = var.region
       PENNSIEVE_API_HOST = var.api_host
       API_KEY_SM_NAME = aws_secretsmanager_secret.api_key_secret.name
-      SQS_URL = aws_sqs_queue.terraform_queue.id
+      SQS_URL = aws_sqs_queue.pipeline_queue.id
     }
   }
 }
