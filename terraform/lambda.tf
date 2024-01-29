@@ -33,6 +33,7 @@ resource "aws_lambda_function" "application_gateway" {
       ENVIRONMENT=var.environment
       TASK_DEFINITION_NAME_WM = aws_ecs_task_definition.workflow-manager.family
       CONTAINER_NAME_WM = aws_ecs_task_definition.workflow-manager.family
+      SQS_URL = aws_sqs_queue.terraform_queue.id
     }
   }
 }
