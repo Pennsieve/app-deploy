@@ -203,7 +203,7 @@ resource "aws_ecs_task_definition" "workflow-manager" {
       { name: "PENNSIEVE_API_HOST", value: var.api_host},
       { name: "PENNSIEVE_API_HOST", value: var.api_host2},
       { name: "BASE_DIR", value: "/mnt/efs"},
-      { name: "REGION", value: var.region},
+      { name: "REGION", value: var.region}
       ],
       essential = true
       portMappings = [
@@ -246,7 +246,7 @@ resource "aws_ecs_service" "workflow-manager" {
   cluster         = aws_ecs_cluster.pipeline_cluster.id
   task_definition = aws_ecs_task_definition.workflow-manager.arn
   launch_type = "FARGATE"
-  desired_count = 1
+  desired_count = 0
 
   network_configuration {
     subnets = local.subnet_ids_list
