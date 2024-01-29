@@ -79,7 +79,7 @@ type MsgType struct {
 func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string, logger *slog.Logger) (bool, error) {
 	input := &sqs.ReceiveMessageInput{
 		QueueUrl:            &queueUrl,
-		MaxNumberOfMessages: 1,
+		MaxNumberOfMessages: 5,
 		VisibilityTimeout:   visibilityTimeout,
 		WaitTimeSeconds:     waitingTimeout, // use long polling
 	}

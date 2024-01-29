@@ -8,3 +8,11 @@ resource "aws_sqs_queue" "terraform_queue" {
     Environment = "${var.environment}"
   }
 }
+
+resource "aws_sqs_queue" "pipeline_queue" {
+  name                      = "queue-${random_uuid.val.id}"
+
+  tags = {
+    Environment = "${var.environment}"
+  }
+}

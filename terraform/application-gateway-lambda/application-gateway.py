@@ -73,7 +73,6 @@ def lambda_handler(event, context):
     sqs = boto3_client('sqs')
     response = sqs.send_message(
     QueueUrl=sqs_url,
-    MessageGroupId=message_group_id,
     MessageBody=json.dumps(message)
     )
     

@@ -31,6 +31,6 @@ output "app_gateway_url" {
 output "sqs_url" {
   description = "SQS URL"
 
-  value = aws_sqs_queue.terraform_queue.id
+  value = aws_sqs_queue.pipeline_queue.id
 }
 
