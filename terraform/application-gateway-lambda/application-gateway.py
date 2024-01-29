@@ -10,24 +10,8 @@ import requests
 ecs_client = boto3_client("ecs", region_name=os.environ['REGION'])
 
 def lambda_handler(event, context):
-    cluster_name = os.environ['CLUSTER_NAME']
-    task_definition_name = os.environ['TASK_DEFINITION_NAME']
-    task_definition_name_wm = os.environ['TASK_DEFINITION_NAME_WM']
-    container_name = os.environ['CONTAINER_NAME']
-    security_group = os.environ['SECURITY_GROUP_ID']
-    subnet_ids = os.environ['SUBNET_IDS']
-    task_definition_name_pre = os.environ['TASK_DEFINITION_NAME_PRE']
-    task_definition_name_post = os.environ['TASK_DEFINITION_NAME_POST']
-    container_name_pre = os.environ['CONTAINER_NAME_PRE']
-    container_name_post = os.environ['CONTAINER_NAME_POST']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
-    pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
-    pennsieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
-    pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
-    environment = os.environ['ENVIRONMENT']
-    workflow_manager_name = os.environ['CONTAINER_NAME_WM']
     sqs_url = os.environ['SQS_URL']
-
     # gets api key secrets
     secret_name = os.environ['API_KEY_SM_NAME']
     region_name = os.environ['REGION']

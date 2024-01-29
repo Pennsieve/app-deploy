@@ -65,6 +65,9 @@ func main() {
 	fmt.Println("PENNSIEVE_UPLOAD_BUCKET: ", os.Getenv("PENNSIEVE_UPLOAD_BUCKET"))
 	fmt.Println("TARGET_PATH: ", os.Getenv("TARGET_PATH"))
 
+	fmt.Println("API_KEY: ", os.Getenv("PENNSIEVE_API_KEY"))
+	fmt.Println("API_SECRET: ", os.Getenv("PENNSIEVE_API_SECRET"))
+
 	cmd := exec.Command("/bin/sh", "./agent.sh", datasetID, integrationID)
 	out, err := cmd.Output()
 	if err != nil {
