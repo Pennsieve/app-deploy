@@ -84,10 +84,12 @@ def lambda_handler(event, context):
     r.raise_for_status()
     print(r.json())
 
+    message_group_id = 'pipeline-message-group'
     message = {"integrationId": integration_id, "api_key": api_secret, "api_secret" : api_secret, "session_token" : session_token}
     sqs = boto3_client('sqs')
     response = sqs.send_message(
     QueueUrl=sqs_url,
+    MessageGroupId=message_group_id,
     MessageBody=json.dumps(message)
     )
     

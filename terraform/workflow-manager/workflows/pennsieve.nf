@@ -22,7 +22,7 @@ process PreProcessor {
     script:
     if ("$ENVIRONMENT" != 'LOCAL')
         """
-        python3.9 /service/taskRunner/pre-processor.py ${params.integrationID}
+        python3.9 /service/taskRunner/pre-processor.py ${params.integrationID} ${params.apiKey} ${params.apiSecret} ${params.sessionToken}
         """
     else
         """
@@ -65,7 +65,7 @@ process PostProcessor {
     script:
         if ("$ENVIRONMENT" != 'LOCAL')
         """
-        python3.9 /service/taskRunner/post_processor.py $outputDir
+        python3.9 /service/taskRunner/post_processor.py $outputDir ${params.integrationID} ${params.apiKey} ${params.apiSecret} ${params.sessionToken}
         """
     else
         """

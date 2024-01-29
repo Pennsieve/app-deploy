@@ -11,20 +11,21 @@ ecs_client = boto3_client("ecs", region_name=os.environ['REGION'])
 # Gather our code in a main() function
 def main():
     print('running task runner for integrationID', sys.argv[1])
+    integration_id = sys.argv[1] # pass from gateway
+    api_key = sys.argv[2] # pass from gateway, differ per app
+    api_secret = sys.argv[3] # pass from gateway
+    session_token = sys.argv[4] # pass from gateway
 
     task_definition_name = os.environ['TASK_DEFINITION_NAME_PRE']
     subnet_ids = os.environ['SUBNET_IDS']
     cluster_name = os.environ['CLUSTER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
     container_name = os.environ['CONTAINER_NAME_PRE']
-    api_key = os.environ['PENNSIEVE_API_KEY'] # pass from gateway, differ per app
-    api_secret = os.environ['PENNSIEVE_API_SECRET'] # pass from gateway
     environment = os.environ['ENVIRONMENT']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
-    integration_id = os.environ['INTEGRATION_ID'] # pass from gateway
     base_dir = os.environ['BASE_DIR']
-    session_token = os.environ['SESSION_TOKEN'] # pass from gateway
+    
 
     # start Fargate task
     if cluster_name != "":
