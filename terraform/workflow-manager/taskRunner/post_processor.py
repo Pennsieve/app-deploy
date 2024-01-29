@@ -72,7 +72,7 @@ def main():
 					        'name': 'PENNSIEVE_API_HOST',
 					        'value': pennsieve_host
 				        },
-                                                {
+                        {
 					        'name': 'PENNSIEVE_API_HOST2',
 					        'value': pennsieve_host2
 				        },

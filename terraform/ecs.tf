@@ -201,9 +201,11 @@ resource "aws_ecs_task_definition" "workflow-manager" {
       { name: "SECURITY_GROUP_ID", value: aws_default_security_group.default.id},
       { name: "ENVIRONMENT", value: var.environment},
       { name: "PENNSIEVE_API_HOST", value: var.api_host},
-      { name: "PENNSIEVE_API_HOST", value: var.api_host2},
+      { name: "PENNSIEVE_API_HOST2", value: var.api_host2},
       { name: "BASE_DIR", value: "/mnt/efs"},
-      { name: "REGION", value: var.region}
+      { name: "REGION", value: var.region},
+      { name: "TASK_DEFINITION_NAME", value: aws_ecs_task_definition.pipeline.family},
+      { name: "CONTAINER_NAME", value: aws_ecs_task_definition.pipeline.family},
       ],
       essential = true
       portMappings = [
