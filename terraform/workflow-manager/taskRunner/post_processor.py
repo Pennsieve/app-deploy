@@ -10,22 +10,22 @@ ecs_client = boto3_client("ecs", region_name=os.environ['REGION'])
 
 # Gather our code in a main() function
 def main():
-    print('running task runner for integrationID', sys.argv[1])
+    print('running task runner for integrationID', sys.argv[2])
+    integration_id = sys.argv[2] # pass from gateway
+    api_key = sys.argv[3] # pass from gateway, differ per app
+    api_secret = sys.argv[4] # pass from gateway
+    session_token = sys.argv[5] # should get new session token now that an orchestrator calls the post processor
 
     task_definition_name = os.environ['TASK_DEFINITION_NAME_POST']
     subnet_ids = os.environ['SUBNET_IDS']
     cluster_name = os.environ['CLUSTER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
     container_name = os.environ['CONTAINER_NAME_POST']
-    api_key = os.environ['PENNSIEVE_API_KEY']
-    api_secret = os.environ['PENNSIEVE_API_SECRET']
     pennsieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
     pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
     environment = os.environ['ENVIRONMENT']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
-    integration_id = os.environ['INTEGRATION_ID']
-    session_token = os.environ['SESSION_TOKEN'] # should get new session token now that an orchestrator calls the post processor
 
     # start Fargate task
     if cluster_name != "":

@@ -71,6 +71,9 @@ loop:
 
 type MsgType struct {
 	IntegrationID string `json:"integrationId"`
+	ApiKey        string `json:"api_key"`
+	ApiSecret     string `json:"api_secret"`
+	SessionToken  string `json:"session_token"`
 }
 
 func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string, logger *slog.Logger) (bool, error) {
@@ -104,7 +107,11 @@ func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string, logger
 		log.Printf("message id %s is received from SQS: %#v", id, newMsg.IntegrationID)
 
 		// run pipeline
-		cmd := exec.Command("nextflow", "run", "./workflows/pennsieve.nf", "-ansi-log", "false", "--integrationID", newMsg.IntegrationID)
+		cmd := exec.Command("nextflow", "run", "./workflows/pennsieve.nf", "-ansi-log", "false",
+			"--integrationID", newMsg.IntegrationID,
+			"--apiKey", newMsg.ApiKey,
+			"--apiSecret", newMsg.ApiSecret,
+			"--sessionToken", newMsg.SessionToken)
 		cmd.Dir = "/service"
 		var stdout strings.Builder
 		var stderr strings.Builder
