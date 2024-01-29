@@ -67,6 +67,8 @@ func main() {
 
 	fmt.Println("API_KEY: ", os.Getenv("PENNSIEVE_API_KEY"))
 	fmt.Println("API_SECRET: ", os.Getenv("PENNSIEVE_API_SECRET"))
+	fmt.Println("DATASET_ID: ", datasetID)
+	fmt.Println("INTEGRATION_ID: ", integrationID)
 
 	cmd := exec.Command("/bin/sh", "./agent.sh", datasetID, integrationID)
 	out, err := cmd.Output()
