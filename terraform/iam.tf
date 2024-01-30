@@ -32,6 +32,8 @@ resource "aws_iam_policy" "lambda_iam_policy" {
 
 // ## Main App ##
 // ECS task IAM role
+// TODO - this can be updated, as it does not need to invoke a lambda or run an ecs task
+// TODO - this is shared with the workflow manager and should not be
 resource "aws_iam_role" "task_role_for_ecs_task" {
   name               = "task_role_for_ecs_task-${random_uuid.val.id}"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_role_assume_role.json
@@ -69,6 +71,8 @@ resource "aws_iam_policy" "ecs_run_task" {
           "ecs:RunTask",
           "ecs:ListTasks",
           "iam:PassRole",
+          "sqs:receivemessage",
+          "sqs:deletemessage",
         ]
         Effect   = "Allow"
         Resource = "*"

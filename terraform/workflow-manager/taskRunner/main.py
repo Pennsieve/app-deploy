@@ -16,14 +16,6 @@ def main():
     cluster_name = os.environ['CLUSTER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
     container_name = os.environ['CONTAINER_NAME']
-    api_key = os.environ['PENNSIEVE_API_KEY']
-    api_secret = os.environ['PENNSIEVE_API_SECRET']
-    environment = os.environ['ENVIRONMENT']
-    pennsieve_host = os.environ['PENNSIEVE_API_HOST']
-    pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
-    integration_id = os.environ['INTEGRATION_ID']
-    base_dir = os.environ['BASE_DIR']
-    session_token = os.environ['SESSION_TOKEN']
     inputDir = sys.argv[1]
     outputDir = sys.argv[2]
 
@@ -48,42 +40,6 @@ def main():
 		        {
 		            'name': container_name,
 			        'environment': [
-				        {
-					        'name': 'INTEGRATION_ID',
-					        'value': integration_id
-				        },
-                        {
-					        'name': 'PENNSIEVE_API_KEY',
-					        'value': api_key
-				        },
-                        {
-					        'name': 'PENNSIEVE_API_SECRET',
-					        'value': api_secret
-				        },
-                        {
-					        'name': 'BASE_DIR',
-					        'value': base_dir
-				        },
-                        {
-					        'name': 'PENNSIEVE_API_HOST',
-					        'value': pennsieve_host
-				        },
-                                                {
-					        'name': 'PENNSIEVE_API_HOST2',
-					        'value': pennsieve_host2
-				        },
-                        {
-					        'name': 'SESSION_TOKEN',
-					        'value': session_token
-				        },
-                        {
-					        'name': 'ENVIRONMENT',
-					        'value': environment
-				        },
-                        {
-					        'name': 'REGION',
-					        'value': os.environ['REGION']
-				        },
                         {
 					        'name': 'INPUT_DIR',
 					        'value': inputDir
