@@ -44,6 +44,11 @@ func main() {
 		}
 	}
 	fmt.Println("target path", target_path)
+	setErr := os.Setenv("TARGET_PATH", target_path)
+	if setErr != nil {
+		fmt.Println("error setting variable TARGET_PATH:",
+			setErr)
+	}
 
 	fmt.Println("ENVIRONMENT: ", environment)
 	fmt.Println("PENNSIEVE_API_HOST: ", os.Getenv("PENNSIEVE_API_HOST"))
@@ -69,7 +74,7 @@ func main() {
 	fmt.Println("DATASET_ID: ", datasetID)
 	fmt.Println("INTEGRATION_ID: ", integrationID)
 
-	cmd := exec.Command("/bin/sh", "./agent.sh", datasetID, integrationID, target_path)
+	cmd := exec.Command("/bin/sh", "./agent.sh", datasetID, integrationID)
 	out, err := cmd.Output()
 	if err != nil {
 		log.Fatalf("error %s", err)
