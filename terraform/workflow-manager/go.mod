@@ -3,9 +3,8 @@ module github.com/pennsieve/workflow-manager
 go 1.21.3
 
 require (
-	github.com/aws/aws-sdk-go v1.50.0
 	github.com/aws/aws-sdk-go-v2/config v1.26.5
-	github.com/aws/aws-sdk-go-v2/service/ecs v1.37.0
+	github.com/aws/aws-sdk-go-v2/service/sqs v1.29.7
 )
 
 require (
@@ -21,5 +20,4 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.21.7 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.26.7 // indirect
 	github.com/aws/smithy-go v1.19.0 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
 )

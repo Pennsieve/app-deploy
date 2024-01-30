@@ -27,3 +27,10 @@ output "app_gateway_url" {
 
   value = aws_lambda_function_url.app_gateway.function_url
 }
+
+output "sqs_url" {
+  description = "SQS URL"
+
+  value = aws_sqs_queue.pipeline_queue.id
+}
+
