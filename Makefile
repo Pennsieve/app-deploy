@@ -39,9 +39,8 @@ deploy:
 	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
 	@echo "Deploying app"
 	cd $(WORKING_DIR)/terraform/application-wrapper/applications ; git clone -b ${APP_GIT_BRANCH} --single-branch "https://${APP_GIT_REPOSITORY}" app
-	cd $(WORKING_DIR)/terraform/application-wrapper/applications/app
-	docker buildx build --platform linux/amd64 --progress=plain -t ${APP_GIT_REPOSITORY} .
-	docker tag pennsieve/app-wrapper ${APP_REPO}
+	cd $(WORKING_DIR)/terraform/application-wrapper/applications/app ; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/${APP_NAME} .
+	docker tag pennsieve/${APP_NAME} ${APP_REPO}
 	docker push ${APP_REPO}
 	rm -rf $(WORKING_DIR)/terraform/application-wrapper/applications/app
 	@echo "Deploying post processor"
