@@ -38,21 +38,12 @@ delete-route:
 deploy:
 	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
 	@echo "Deploying app"
-	cd $(WORKING_DIR)/terraform/application-wrapper/applications ; git clone "https://${APP_GIT_REPOSITORY}" app
+	cd $(WORKING_DIR)/terraform/application-wrapper/applications ; git clone -b ${APP_GIT_BRANCH} --single-branch "https://${APP_GIT_REPOSITORY}" app
 	cd $(WORKING_DIR)/terraform/application-wrapper/applications/app
-	cp $(WORKING_DIR)/terraform/application-wrapper/applications/app/${ENTRYPOINT} $(WORKING_DIR)/terraform/application-wrapper/${ENTRYPOINT}
-	cp $(WORKING_DIR)/terraform/application-wrapper/applications/app/Dockerfile $(WORKING_DIR)/terraform/application-wrapper/Dockerfile
-    ifeq ($(ENTRYPOINT),main.py)
-		cp $(WORKING_DIR)/terraform/application-wrapper/main.py.nf $(WORKING_DIR)/terraform/application-wrapper/main.nf
-		cp $(WORKING_DIR)/terraform/application-wrapper/applications/app/requirements.txt $(WORKING_DIR)/terraform/application-wrapper/requirements.txt
-    else ifeq ($(ENTRYPOINT),main.R)
-		cp $(WORKING_DIR)/terraform/application-wrapper/main.R.nf $(WORKING_DIR)/terraform/application-wrapper/main.nf
-		cp -R $(WORKING_DIR)/terraform/application-wrapper/applications/app/dependencies/* $(WORKING_DIR)/terraform/application-wrapper/dependencies
-    endif
-	rm -rf $(WORKING_DIR)/terraform/application-wrapper/applications/app
-	cd $(WORKING_DIR)/terraform/application-wrapper; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/app-wrapper .
+	docker buildx build --platform linux/amd64 --progress=plain -t ${APP_GIT_REPOSITORY} .
 	docker tag pennsieve/app-wrapper ${APP_REPO}
 	docker push ${APP_REPO}
+	rm -rf $(WORKING_DIR)/terraform/application-wrapper/applications/app
 	@echo "Deploying post processor"
 	cd $(WORKING_DIR)/terraform/post-processor; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/post-processor .
 	docker tag pennsieve/post-processor ${POST_PROCESSOR_REPO}
