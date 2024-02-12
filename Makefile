@@ -38,6 +38,9 @@ delete-route:
 create-application:
 	docker-compose run app-deploy -cmd create-application
 
+destroy-application:
+	docker-compose run app-deploy -cmd destroy-application
+
 create-remote-state-app:
 	docker-compose run app-deploy -cmd create-remote-state-app	
 
