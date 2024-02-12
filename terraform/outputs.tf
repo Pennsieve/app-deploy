@@ -1,9 +1,3 @@
-output "app_ecr_repository" {
-  description = "App ECR repository"
-
-  value = aws_ecr_repository.app.repository_url
-}
-
 output "pre_processor_ecr_repository" {
   description = "Pre Processor ECR repository"
 
@@ -34,3 +28,8 @@ output "sqs_url" {
   value = aws_sqs_queue.pipeline_queue.id
 }
 
+output "efs_id" {
+  description = "EFS ID"
+
+  value = aws_efs_file_system.pipeline.id
+}

@@ -43,7 +43,7 @@ process Pipeline {
     script:
     if ("$ENVIRONMENT" != 'LOCAL')
         """
-        python3.9 /service/taskRunner/main.py $inputDir $outputDir
+        python3.9 /service/taskRunner/main.py $inputDir $outputDir ${params.integrationID} ${params.sessionToken}
         """
     else
         """

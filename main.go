@@ -8,7 +8,9 @@ import (
 )
 
 var TerraformStateDirectory = "/service/terraform/remote-state"
+var TerraformAppStateDirectory = "/service/terraform/remote-state-application"
 var TerraformGatewayDirectory = "/service/terraform/internet-gateway"
+var TerraformApplicationDirectory = "/service/terraform/application-wrapper"
 
 func main() {
 	cmdPtr := flag.String("cmd", "plan", "command to execute")
@@ -17,6 +19,17 @@ func main() {
 	// Remote State Management - S3 Backend (once-off)
 	if *cmdPtr == "create-backend" || *cmdPtr == "delete-backend" {
 		cmd := exec.Command("/bin/sh", "./scripts/remote-state.sh", TerraformStateDirectory, *cmdPtr)
+		out, err := cmd.Output()
+		if err != nil {
+			log.Fatalf("error %s", err)
+		}
+		output := string(out)
+		fmt.Println(output)
+	}
+
+	// Remote State Application Management
+	if *cmdPtr == "create-remote-state-app" || *cmdPtr == "remote-state-app" {
+		cmd := exec.Command("/bin/sh", "./scripts/remote-state-application.sh", TerraformAppStateDirectory, *cmdPtr)
 		out, err := cmd.Output()
 		if err != nil {
 			log.Fatalf("error %s", err)
@@ -45,6 +58,17 @@ func main() {
 		}
 		output := string(out)
 		fmt.Println(output)
+	}
+
+	// application creation
+	if *cmdPtr == "create-application" || *cmdPtr == "destroy-application" {
+		cmd := exec.Command("/bin/sh", "./scripts/application.sh", TerraformApplicationDirectory, *cmdPtr)
+		out, err := cmd.Output()
+		output := string(out)
+		fmt.Println(output)
+		if err != nil {
+			log.Fatalf("error %s", err.Error())
+		}
 	}
 
 	log.Println("done")
