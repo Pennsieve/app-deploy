@@ -30,7 +30,7 @@ resource "aws_iam_policy" "lambda_iam_policy" {
   policy = data.aws_iam_policy_document.iam_policy_document_gateway.json
 }
 
-// ## Main App ##
+// ## App ##
 // ECS task IAM role
 // TODO - this can be updated, as it does not need to invoke a lambda or run an ecs task
 // TODO - this is shared with the workflow manager and should not be

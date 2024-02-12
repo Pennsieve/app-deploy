@@ -24,56 +24,6 @@ resource "aws_ecs_cluster" "pipeline_cluster" {
   }
 }
 
-// ECS Task definition
-resource "aws_ecs_task_definition" "pipeline" {
-  family                = "pipeline-${random_uuid.val.id}"
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  cpu                      = var.app_cpu
-  memory                   = var.app_memory
-  task_role_arn      = aws_iam_role.task_role_for_ecs_task.arn
-  execution_role_arn = aws_iam_role.execution_role_for_ecs_task.arn
-
-  container_definitions = jsonencode([
-    {
-      name      = "pipeline-${random_uuid.val.id}"
-      image     = aws_ecr_repository.app.repository_url
-      essential = true
-      portMappings = [
-        {
-          containerPort = 8081
-          hostPort      = 8081
-        }
-      ]
-      mountPoints = [
-        {
-          sourceVolume = "pipeline-storage-${random_uuid.val.id}"
-          containerPath = "/mnt/efs"
-          readOnly = false
-        }
-      ]
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-group = "/ecs/pipeline/${random_uuid.val.id}"
-          awslogs-region = var.region
-          awslogs-stream-prefix = "ecs"
-          awslogs-create-group = "true"
-        }
-      }
-    }
-  ])
-
-  volume {
-    name = "pipeline-storage-${random_uuid.val.id}"
-
-    efs_volume_configuration {
-      file_system_id          = aws_efs_file_system.pipeline.id
-      root_directory          = "/"
-    }
-  }
-}
-
 // ECS Task definition - post processor
 resource "aws_ecs_task_definition" "post-processor" {
   family                = "post-processor-${random_uuid.val.id}"
@@ -203,9 +153,7 @@ resource "aws_ecs_task_definition" "workflow-manager" {
       { name: "PENNSIEVE_API_HOST", value: var.api_host},
       { name: "PENNSIEVE_API_HOST2", value: var.api_host2},
       { name: "BASE_DIR", value: "/mnt/efs"},
-      { name: "REGION", value: var.region},
-      { name: "TASK_DEFINITION_NAME", value: aws_ecs_task_definition.pipeline.family},
-      { name: "CONTAINER_NAME", value: aws_ecs_task_definition.pipeline.family},
+      { name: "REGION", value: var.region}
       ],
       essential = true
       portMappings = [
