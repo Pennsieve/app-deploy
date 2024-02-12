@@ -33,7 +33,13 @@ create-route:
 	docker-compose run app-deploy -cmd create-route
 
 delete-route:
-	docker-compose run app-deploy -cmd delete-route	
+	docker-compose run app-deploy -cmd delete-route
+
+create-application:
+	docker-compose run app-deploy -cmd create-application
+
+create-remote-state-app:
+	docker-compose run app-deploy -cmd create-remote-state-app	
 
 deploy:
 	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com

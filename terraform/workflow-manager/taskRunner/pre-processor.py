@@ -14,7 +14,7 @@ def main():
     integration_id = sys.argv[1] # pass from gateway
     api_key = sys.argv[2] # pass from gateway, differ per app
     api_secret = sys.argv[3] # pass from gateway
-    session_token = sys.argv[4] # pass from gateway
+    session_token = sys.argv[4] # should this be passed from gateway?
 
     task_definition_name = os.environ['TASK_DEFINITION_NAME_PRE']
     subnet_ids = os.environ['SUBNET_IDS']

@@ -5,19 +5,28 @@ from boto3 import client as boto3_client
 import sys
 import os
 import json
+import requests
 
 ecs_client = boto3_client("ecs", region_name=os.environ['REGION'])
 
 # Gather our code in a main() function
 def main():
-
-    task_definition_name = os.environ['TASK_DEFINITION_NAME']
     subnet_ids = os.environ['SUBNET_IDS']
     cluster_name = os.environ['CLUSTER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
-    container_name = os.environ['CONTAINER_NAME']
+    pennsieve_host = os.environ['PENNSIEVE_API_HOST']
+
     inputDir = sys.argv[1]
     outputDir = sys.argv[2]
+    integration_id = sys.argv[3]
+    session_token = sys.argv[4]
+
+    r = requests.get(f"{pennsieve_host}/integrations/{integration_id}", headers={"Authorization": f"Bearer {session_token}"})
+    r.raise_for_status()
+    print(r.json())
+
+    task_definition_name = r.json()["applications"][0]["app_id"]
+    container_name = r.json()["applications"][0]["app_id"]
 
     # start Fargate task
     if cluster_name != "":
