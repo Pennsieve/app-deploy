@@ -21,8 +21,9 @@ RUN rm -f /service/nextflow
 RUN export NXF_VER=23.10.0
 
 RUN apt-get clean
-RUN apt-get -y install software-properties-common && add-apt-repository ppa:deadsnakes/ppa
-RUN apt-get update & apt-get -y install python3.9
+RUN apt-get -y install software-properties-common && add-apt-repository universe
+RUN apt-get update
+RUN apt-get clean && apt-get -y install python3.9
 RUN python3.9 --version
 
 COPY . .
