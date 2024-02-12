@@ -26,8 +26,8 @@ def main():
     r.raise_for_status()
     print(r.json())
 
-    task_definition_name = r.json()["applications"][0]["app_id"]
-    container_name = r.json()["applications"][0]["app_id"]
+    task_definition_name = r.json()["params"]["app_id"]
+    container_name = r.json()["params"]["app_id"]
 
     # start Fargate task
     if cluster_name != "":
