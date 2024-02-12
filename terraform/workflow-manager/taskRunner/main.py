@@ -15,13 +15,14 @@ def main():
     cluster_name = os.environ['CLUSTER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
+    pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
 
     inputDir = sys.argv[1]
     outputDir = sys.argv[2]
     integration_id = sys.argv[3]
     session_token = sys.argv[4]
 
-    r = requests.get(f"{pennsieve_host}/integrations/{integration_id}", headers={"Authorization": f"Bearer {session_token}"})
+    r = requests.get(f"{pennsieve_host2}/integrations/{integration_id}", headers={"Authorization": f"Bearer {session_token}"})
     r.raise_for_status()
     print(r.json())
 

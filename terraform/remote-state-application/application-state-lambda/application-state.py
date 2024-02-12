@@ -6,7 +6,6 @@ import base64
 
 s3 = boto3_client('s3')
 
-    
 def lambda_handler(event, context):
 
     print(event)
