@@ -8,7 +8,7 @@ import (
 )
 
 var TerraformStateDirectory = "/service/terraform/remote-state"
-var TerraformAppStateDirectory = "/service/terraform/remote-state-application"
+var TerraformAppStateDirectory = "/service/terraform/application-state"
 var TerraformGatewayDirectory = "/service/terraform/internet-gateway"
 var TerraformApplicationDirectory = "/service/terraform/application-wrapper"
 
@@ -28,8 +28,8 @@ func main() {
 	}
 
 	// Remote State Application Management
-	if *cmdPtr == "create-remote-state-app" || *cmdPtr == "remote-state-app" {
-		cmd := exec.Command("/bin/sh", "./scripts/remote-state-application.sh", TerraformAppStateDirectory, *cmdPtr)
+	if *cmdPtr == "create-application-state-app" || *cmdPtr == "delete-application-state-app" {
+		cmd := exec.Command("/bin/sh", "./scripts/application-state-app.sh", TerraformAppStateDirectory, *cmdPtr)
 		out, err := cmd.Output()
 		if err != nil {
 			log.Fatalf("error %s", err)
