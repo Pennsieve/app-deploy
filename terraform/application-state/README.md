@@ -1,1 +1,1 @@
-The remote state S3 bucket needs to be created before the application infrastructure is created.
+Application that keeps tracko of applications state, listens for S3 events and inserts applicat details into a Dynamo DB table.
