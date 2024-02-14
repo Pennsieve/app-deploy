@@ -92,9 +92,9 @@ def main():
         })
         task_arn = response['tasks'][0]['taskArn']
 
-        # POST at start of task
-        data = { "task_id": task_arn, "description": "pre-processor", "start": "some-start-time", "end": "some-end-time"}
-        r = requests.post(f"{pennsieve_status_host}",data=data)
+        # POST at start of task - check (for success) if task_arn is present
+        data = { 'task_id': task_arn, 'integration_id': integration_id, 'description': 'pre-processor'}
+        r = requests.post(pennsieve_status_host, json=data)
         r.raise_for_status()
         print(r.json())
 
