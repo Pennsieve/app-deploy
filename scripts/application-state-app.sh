@@ -2,7 +2,7 @@
 
 cd $1
 
-if [ $2 = "create-remote-state-app" ]; then
+if [ $2 = "create-application-state-app" ]; then
   echo "creating ..."
   terraform init
   terraform plan -out=tfplan > plan.log

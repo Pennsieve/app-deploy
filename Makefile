@@ -41,8 +41,14 @@ create-application:
 destroy-application:
 	docker-compose run app-deploy -cmd destroy-application
 
-create-remote-state-app:
-	docker-compose run app-deploy -cmd create-remote-state-app	
+create-application-state-app:
+	docker-compose run app-deploy -cmd create-application-state-app
+
+create-status-service:
+	docker-compose run app-deploy -cmd create-status-service
+
+destroy-status-service:
+	docker-compose run app-deploy -cmd destroy-status-service	
 
 deploy:
 	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com

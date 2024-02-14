@@ -14,8 +14,8 @@ def main():
     subnet_ids = os.environ['SUBNET_IDS']
     cluster_name = os.environ['CLUSTER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
-    pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
+    pennsieve_status_host = os.environ['PENNSIEVE_STATUS_HOST']
 
     inputDir = sys.argv[1]
     outputDir = sys.argv[2]
@@ -64,6 +64,12 @@ def main():
 	        ],
         })
         task_arn = response['tasks'][0]['taskArn']
+
+        # POST at start of task - check (for success) if task_arn is present
+        data = { 'task_id': task_arn, 'integration_id': integration_id, 'description': 'main'}
+        r = requests.post(pennsieve_status_host, json=data)
+        r.raise_for_status()
+        print(r.json())
 
         waiter = ecs_client.get_waiter('tasks_stopped')
         waiter.wait(

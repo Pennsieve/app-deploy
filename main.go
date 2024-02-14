@@ -8,9 +8,10 @@ import (
 )
 
 var TerraformStateDirectory = "/service/terraform/remote-state"
-var TerraformAppStateDirectory = "/service/terraform/remote-state-application"
+var TerraformAppStateDirectory = "/service/terraform/application-state"
 var TerraformGatewayDirectory = "/service/terraform/internet-gateway"
 var TerraformApplicationDirectory = "/service/terraform/application-wrapper"
+var TerraformStatusServiceDirectory = "/service/terraform/status-service"
 
 func main() {
 	cmdPtr := flag.String("cmd", "plan", "command to execute")
@@ -28,8 +29,8 @@ func main() {
 	}
 
 	// Remote State Application Management
-	if *cmdPtr == "create-remote-state-app" || *cmdPtr == "remote-state-app" {
-		cmd := exec.Command("/bin/sh", "./scripts/remote-state-application.sh", TerraformAppStateDirectory, *cmdPtr)
+	if *cmdPtr == "create-application-state-app" || *cmdPtr == "delete-application-state-app" {
+		cmd := exec.Command("/bin/sh", "./scripts/application-state-app.sh", TerraformAppStateDirectory, *cmdPtr)
 		out, err := cmd.Output()
 		if err != nil {
 			log.Fatalf("error %s", err)
@@ -63,6 +64,17 @@ func main() {
 	// application creation
 	if *cmdPtr == "create-application" || *cmdPtr == "destroy-application" {
 		cmd := exec.Command("/bin/sh", "./scripts/application.sh", TerraformApplicationDirectory, *cmdPtr)
+		out, err := cmd.Output()
+		output := string(out)
+		fmt.Println(output)
+		if err != nil {
+			log.Fatalf("error %s", err.Error())
+		}
+	}
+
+	// status service
+	if *cmdPtr == "create-status-service" || *cmdPtr == "destroy-status-service" {
+		cmd := exec.Command("/bin/sh", "./scripts/status-service.sh", TerraformStatusServiceDirectory, *cmdPtr)
 		out, err := cmd.Output()
 		output := string(out)
 		fmt.Println(output)

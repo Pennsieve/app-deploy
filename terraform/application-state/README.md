@@ -1,0 +1,1 @@
+Application that keeps tracko of applications state, listens for S3 events and inserts applicat details into a Dynamo DB table.

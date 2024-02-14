@@ -123,7 +123,7 @@ func processSQS(ctx context.Context, sqsSvc *sqs.Client, queueUrl string, logger
 				logger.Error(err.Error(),
 					slog.String("error", stderr.String()))
 			}
-			log.Println(stdout.String())
+			fmt.Println(stdout.String())
 
 			_, err = sqsSvc.DeleteMessage(ctx, &sqs.DeleteMessageInput{
 				QueueUrl:      &queueUrl,

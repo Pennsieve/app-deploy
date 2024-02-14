@@ -62,3 +62,6 @@ variable "wm_cpu" {
 variable "wm_memory" {
     type = number
 }
+variable "status_api_host" {
+    type = string
+}
