@@ -44,6 +44,7 @@ post_processor_cpu = "${POST_PROCESSOR_CPU:-2048}"
 post_processor_memory = "${POST_PROCESSOR_MEMORY:-4096}"
 wm_cpu = "${WM_CPU:-2048}"
 wm_memory = "${WM_MEMORY:-4096}"
+status_api_host = "${STATUS_API_HOST}"
 EOL
 
 if [ $1 = "destroy" ]; then

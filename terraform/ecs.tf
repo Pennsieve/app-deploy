@@ -153,7 +153,8 @@ resource "aws_ecs_task_definition" "workflow-manager" {
       { name: "PENNSIEVE_API_HOST", value: var.api_host},
       { name: "PENNSIEVE_API_HOST2", value: var.api_host2},
       { name: "BASE_DIR", value: "/mnt/efs"},
-      { name: "REGION", value: var.region}
+      { name: "REGION", value: var.region},
+      { name: "PENNSIEVE_STATUS_HOST", value: var.status_api_host},
       ],
       essential = true
       portMappings = [

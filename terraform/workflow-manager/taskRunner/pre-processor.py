@@ -5,6 +5,7 @@ from boto3 import client as boto3_client
 import sys
 import os
 import json
+import requests
 
 ecs_client = boto3_client("ecs", region_name=os.environ['REGION'])
 
@@ -25,7 +26,7 @@ def main():
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
     base_dir = os.environ['BASE_DIR']
-    
+    pennsieve_status_host = os.environ['PENNSIEVE_STATUS_HOST'] 
 
     # start Fargate task
     if cluster_name != "":
@@ -90,6 +91,12 @@ def main():
 	        ],
         })
         task_arn = response['tasks'][0]['taskArn']
+
+        # POST at start of task
+        data = { "task_id": task_arn, "description": "pre-processor", "start": "some-start-time", "end": "some-end-time"}
+        r = requests.post(f"{pennsieve_status_host}",data=data)
+        r.raise_for_status()
+        print(r.json())
 
         waiter = ecs_client.get_waiter('tasks_stopped')
         waiter.wait(
