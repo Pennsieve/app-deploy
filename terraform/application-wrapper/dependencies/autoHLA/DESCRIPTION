@@ -1,0 +1,24 @@
+Package: autoHLA
+Type: Package
+Title: Automated HLA typing by flow cytometry
+Version: 0.1.0
+Author: Matei Ionita
+Maintainer: Matei Ionita <matei.ionita@gmail.com>
+Description: Process raw flow cytometry files in day-of-run batches.
+    Assumes existence of a triple positive and a triple negative control
+    among files in each batch. Assumes that markers A2, A3 and B7 are measured.
+Imports:
+  ggplot2,
+  magrittr,
+  dplyr,
+  stringr,
+  readr,
+  tibble,
+  tidyr,
+  KernSmooth,
+  flowCore,
+  ggridges
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
