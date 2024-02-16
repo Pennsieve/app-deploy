@@ -2,7 +2,7 @@
 resource "aws_lambda_function" "application_gateway" {
   function_name = "application-gateway-${random_uuid.val.id}"
   role          = aws_iam_role.iam_for_lambda.arn
-  handler       = "application-gateway.lambda_handler" # module is name of python file: application
+  handler       = "lambda_function.lambda_handler" # module is name of python file: application
   description   = "Application: [${var.app_name}]; Environment: [${var.environment}]"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
@@ -10,7 +10,7 @@ resource "aws_lambda_function" "application_gateway" {
 
   source_code_hash = data.archive_file.application_gateway_lambda.output_base64sha256
 
-  runtime = "python3.7" # update to 3.11
+  runtime = "python3.12"
   timeout = 60
 
   environment {
