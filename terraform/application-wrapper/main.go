@@ -140,6 +140,10 @@ func main() {
 	}
 	// run pipeline
 	cmd := exec.Command("nextflow", "run", "/service/main.nf", "-ansi-log", "false", "--integrationID", integrationID, "--inputDir", inputDir, "--outputDir", outputDir)
+	cmd = setEnvVars(cmd, map[string]string{
+		"INPUT_DIR":  os.Getenv("INPUT_DIR"),
+		"OUTPUT_DIR": os.Getenv("OUTPUT_DIR"),
+	})
 	cmd.Dir = "/service"
 	var out strings.Builder
 	var stderr strings.Builder
@@ -332,4 +336,12 @@ func getIntegration(apiHost string, integrationId string, sessionToken string) (
 	body, _ := io.ReadAll(res.Body)
 
 	return body, nil
+}
+
+func setEnvVars(cmd *exec.Cmd, envVars map[string]string) *exec.Cmd {
+	cmd.Env = os.Environ()
+	for k, v := range envVars {
+		cmd.Env = append(cmd.Env, fmt.Sprintf("%s=%s", k, v))
+	}
+	return cmd
 }
