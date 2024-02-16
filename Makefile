@@ -38,7 +38,7 @@ delete-route:
 deploy:
 	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
 	@echo "Deploying app"
-	cd $(WORKING_DIR)/terraform/application-wrapper/applications ; git clone "https://${APP_GIT_REPOSITORY}" app
+	cd $(WORKING_DIR)/terraform/application-wrapper/applications ; git clone ${APP_GIT_BRANCH} --single-branch "https://${APP_GIT_REPOSITORY}" app
 	cd $(WORKING_DIR)/terraform/application-wrapper/applications/app
 	cp $(WORKING_DIR)/terraform/application-wrapper/applications/app/${ENTRYPOINT} $(WORKING_DIR)/terraform/application-wrapper/${ENTRYPOINT}
 	cp $(WORKING_DIR)/terraform/application-wrapper/applications/app/Dockerfile $(WORKING_DIR)/terraform/application-wrapper/Dockerfile
