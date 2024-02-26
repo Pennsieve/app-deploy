@@ -17,8 +17,8 @@ resource "aws_lambda_function" "compute_node_service" {
     variables = {
       REGION = "us-east-1"
       CLUSTER_NAME = aws_ecs_cluster.pipeline_cluster.name
-      # TASK_DEFINITION_NAME = aws_ecs_task_definition.pipeline.family
-      # CONTAINER_NAME = aws_ecs_task_definition.pipeline.family # currently same as name of task definition
+      TASK_DEFINITION_NAME = aws_ecs_task_definition.pipeline.family
+      CONTAINER_NAME = aws_ecs_task_definition.pipeline.family # currently same as name of task definition
       # SUBNET_IDS = local.subnet_ids
       # SECURITY_GROUP_ID = aws_default_security_group.default.id
     }
