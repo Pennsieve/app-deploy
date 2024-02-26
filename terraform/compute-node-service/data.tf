@@ -32,4 +32,18 @@ data "aws_iam_policy_document" "iam_policy_document_compute" {
       "*"
     ]
   }
+
+  statement {
+    sid    = "IAMPermissions"
+    effect = "Allow"
+    actions = [
+      "iam:CreateUser",
+      "iam:GetUser",
+      "iam:CreateAccessKey",
+      "iam:PutUserPolicy"
+    ]
+    resources = [
+      "*"
+    ]
+  }
 }
