@@ -87,20 +87,6 @@ resource "aws_s3_object" "compute_node_service_lambda" {
   etag = filemd5(data.archive_file.compute_node_service_lambda.output_path)
 }
 
-// policy document - compute service lambda
-data "aws_iam_policy_document" "iam_policy_document_compute" {
-  statement {
-    sid    = "CloudwatchPermissions"
-    effect = "Allow"
-    actions = [
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents"
-    ]
-    resources = ["*"]
-  }
-}
-
 // S3 bucket
 resource "aws_s3_bucket" "lambda_bucket" {
   bucket = random_uuid.val.id
