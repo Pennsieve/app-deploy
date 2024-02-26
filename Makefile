@@ -48,7 +48,13 @@ create-status-service:
 	docker-compose run app-deploy -cmd create-status-service
 
 destroy-status-service:
-	docker-compose run app-deploy -cmd destroy-status-service	
+	docker-compose run app-deploy -cmd destroy-status-service
+
+create-compute-node:
+	docker-compose run app-deploy -cmd create-compute-node
+
+destroy-compute-node:
+	docker-compose run app-deploy -cmd destroy-compute-node
 
 deploy:
 	aws ecr get-login-password --profile ${AWS_PROFILE} --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
