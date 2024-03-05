@@ -27,6 +27,8 @@ def lambda_handler(event, context):
 	print(json_body)
 
 	account_id = json_body['accountId']
+	source_url = json_body['sourceUrl']
+	destination = json_body['destination']
 
 	# create user and role
 	user = None
@@ -116,6 +118,24 @@ def lambda_handler(event, context):
 			f"{error.response['Error']['Message']}"
 		)
 		raise
+
+	# list buckets
+	# try:
+	# 	print("listing buckets")
+	# 	s3_resource = boto3.resource(
+	# 	"s3",
+	# 	aws_access_key_id=temp_credentials["AccessKeyId"],
+	# 	aws_secret_access_key=temp_credentials["SecretAccessKey"],
+	# 	aws_session_token=temp_credentials["SessionToken"],
+	# 	)
+	# 	for bucket in s3_resource.buckets.all():
+	# 		print(bucket.name)
+	# except ClientError as error:
+	# 	print(
+	# 		f"Couldn't list buckets for the account. Here's why: "
+	# 		f"{error.response['Error']['Message']}"
+	# 	)
+	# 	raise
 			
     # start Fargate task
 	if cluster_name != "":
@@ -137,6 +157,7 @@ def lambda_handler(event, context):
 	        'containerOverrides': [
 		        {
 		            'name': container_name,
+		            'command': ['--context', source_url, "--destination", destination, "--force"],
 			        'environment': [
                         {
 					        'name': 'AWS_ACCESS_KEY_ID',
@@ -166,4 +187,4 @@ def user_exists(user_name):
         iam_resource.get_user(UserName=user_name)
         return True
     except Exception:
-        return False	
+        return False
