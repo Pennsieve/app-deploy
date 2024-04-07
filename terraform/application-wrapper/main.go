@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -18,6 +19,16 @@ func main() {
 	outputDir := os.Getenv("OUTPUT_DIR")
 
 	log.Println("Starting pipeline")
+	setErr := os.Setenv("INPUT_DIR", inputDir)
+	if setErr != nil {
+		fmt.Println("error setting variable INPUT_DIR:",
+			setErr)
+	}
+	setOutputErr := os.Setenv("OUTPUT_DIR", outputDir)
+	if setOutputErr != nil {
+		fmt.Println("error setting variable OUTPUT_DIR:",
+			setOutputErr)
+	}
 	// run pipeline
 	cmd := exec.Command("nextflow", "run", "/service/main.nf", "-ansi-log", "false", "--inputDir", inputDir, "--outputDir", outputDir)
 	cmd.Dir = "/service"
