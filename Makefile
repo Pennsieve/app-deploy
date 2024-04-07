@@ -48,9 +48,11 @@ deploy:
 	docker tag pennsieve/post-processor ${POST_PROCESSOR_REPO}
 	docker push ${POST_PROCESSOR_REPO}
 	@echo "Deploying workflow manager"
-	cd $(WORKING_DIR)/terraform/workflow-manager; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/workflow-manager .
+	cd $(WORKING_DIR)/terraform/application-wrapper/applications ; git clone -b ${WM_GIT_BRANCH} --single-branch "https://${WM_GIT_REPOSITORY}" app
+	cd $(WORKING_DIR)/terraform/application-wrapper/applications/app ; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/workflow-manager .
 	docker tag pennsieve/workflow-manager ${WM_REPO}
 	docker push ${WM_REPO}
+	rm -rf $(WORKING_DIR)/terraform/application-wrapper/applications/app
 	@echo "Deploying pre-processor"
 	cd $(WORKING_DIR)/terraform/pre-processor; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/pre-processor .
 	docker tag pennsieve/pre-processor ${PRE_PROCESSOR_REPO}
