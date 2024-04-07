@@ -189,7 +189,6 @@ resource "aws_ecs_task_definition" "workflow-manager" {
       name      = "wm-${random_uuid.val.id}"
       image     = aws_ecr_repository.workflow-manager.repository_url
       environment: [
-      {name: "SQS_URL", value: aws_sqs_queue.pipeline_queue.id},
       { name: "TASK_DEFINITION_NAME_PRE", value: aws_ecs_task_definition.pre-processor.family},
       { name: "CONTAINER_NAME_PRE", value: aws_ecs_task_definition.pre-processor.family},
       { name: "TASK_DEFINITION_NAME_POST", value: aws_ecs_task_definition.post-processor.family},
