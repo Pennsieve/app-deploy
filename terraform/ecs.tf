@@ -241,17 +241,3 @@ resource "aws_ecs_task_definition" "workflow-manager" {
     }
   }
 }
-
-resource "aws_ecs_service" "workflow-manager" {
-  name            = "wm-${random_uuid.val.id}"
-  cluster         = aws_ecs_cluster.pipeline_cluster.id
-  task_definition = aws_ecs_task_definition.workflow-manager.arn
-  launch_type = "FARGATE"
-  desired_count = 0
-
-  network_configuration {
-    subnets = local.subnet_ids_list
-    assign_public_ip = true
-    security_groups = [aws_default_security_group.default.id]
-  }
-}
