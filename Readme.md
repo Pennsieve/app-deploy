@@ -25,7 +25,7 @@ To view supported commands: Run `make`
 
 `make create`
 
-Retrieve *app_ecr_repository* and *post_processor_ecr_repository* details from *apply.log* file, in the *`application-deployments/<env>/<application>`* folder: 
+Retrieve *app_ecr_repository* and *post_processor_ecr_repository* details by running `make status`: 
 
 *aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName*
 *aws_account_id.dkr.ecr.region.amazonaws.com/postProcessorRepositoryName*
