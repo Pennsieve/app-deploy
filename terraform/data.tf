@@ -62,13 +62,4 @@ data "aws_iam_policy_document" "iam_policy_document_gateway" {
       "*"
     ]
   }
-
-  statement {
-    sid    = "SQSPermissions"
-    effect = "Allow"
-    actions = [
-      "sqs:sendmessage",
-    ]
-    resources = ["*"]
-  }
 }
