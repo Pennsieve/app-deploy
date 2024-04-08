@@ -3,7 +3,7 @@ resource "aws_lambda_function" "application_gateway" {
   function_name = "application-gateway-${random_uuid.val.id}"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "lambda_function.lambda_handler" # module is name of python file: application
-  description   = "Application: [${var.app_name}]; Environment: [${var.environment}]"
+  description   = "Workflow Managed Application: [${var.app_name}]; Environment: [${var.environment}]"
 
   s3_bucket = aws_s3_bucket.lambda_bucket.id
   s3_key    = aws_s3_object.application_gateway_lambda.key
