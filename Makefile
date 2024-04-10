@@ -57,4 +57,3 @@ deploy:
 	cd $(WORKING_DIR)/terraform/pre-processor; docker buildx build --platform linux/amd64 --progress=plain -t pennsieve/pre-processor .
 	docker tag pennsieve/pre-processor ${PRE_PROCESSOR_REPO}
 	docker push ${PRE_PROCESSOR_REPO}
-	cd $(WORKING_DIR) ; git clean -f ; git checkout -- .
