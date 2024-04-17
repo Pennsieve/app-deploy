@@ -35,10 +35,8 @@ Also keep track of: *app_gateway_url*. That URL will be used when you update the
 ## To deploy:
 
 ```
-make deploy ACCOUNT=<aws_account_id> AWS_DEFAULT_REGION=<region> APP_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName AWS_PROFILE=<profile> POST_PROCESSOR_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/postProcessorRepositoryName ENTRYPOINT=main.<extension> APP_GIT_REPOSITORY=<app_git_repository-without-scheme>
+make deploy ACCOUNT=<aws_account_id> AWS_DEFAULT_REGION=<region> APP_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/repositoryName AWS_PROFILE=<profile> POST_PROCESSOR_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/postProcessorRepositoryName APP_GIT_REPOSITORY=<app_git_repository-without-scheme> WM_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/workflowManagerRepositoryName PRE_PROCESSOR_REPO=aws_account_id.dkr.ecr.region.amazonaws.com/preProcessorRepositoryName APP_GIT_BRANCH=<branch> APP_NAME=<appName> WM_GIT_BRANCH=<branch> WM_GIT_REPOSITORY=github.com/Pennsieve/workflow-manager
 ```
-
-*extension* - py or R
 
 Example source code repositories:
 
