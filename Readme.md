@@ -20,7 +20,7 @@ To view supported commands: Run `make`
 
 - Copy the *application.env.sample* file in the *dev* or *prod* *configs* folders in *application-deployments* to *`<applicationName>.env`*. Update the file to match your desired application config, and then update the *docker-compose.yml* file to the location of the *<applicationName>.env* file for the application you would like to create/deploy. The *configs* folder is setup such that multiple application configs can stored in that folder, and you can update the *docker-compose.yml* file to point to the config of the deploy application you would like to deploy.
 
-- If an S3 storage does not currently exist to store the infrastructure state, run `make create-backend` to create it. Copy the output of that command (*aws_bucket_name*), as it will be used in the `env` file in the following section (for the ENV variable *TF_REMOTE_BUCKET*).
+- If an S3 storage does not currently exist to store the infrastructure state, run `make create-backend` to create it. Copy the output of that command (*aws_bucket_name*), and update the ENV variable *TF_REMOTE_BUCKET* in your env file.
 
 `make create`
 
