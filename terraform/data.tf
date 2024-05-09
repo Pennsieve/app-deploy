@@ -29,6 +29,7 @@ data "aws_iam_policy_document" "iam_policy_document_gateway" {
     resources = ["*"]
   }
 
+  // TODO: the ECSTaskPermissions can be removed
   statement {
     sid    = "ECSTaskPermissions"
     effect = "Allow"

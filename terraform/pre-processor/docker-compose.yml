@@ -2,13 +2,13 @@ version: '3.9'
 
 services:
   
-  app-wrapper:
+  pre-processor:
     env_file:
       - dev.env
-    image: pennsieve/app-wrapper
+    image: pennsieve/pre-processor
     volumes:
       - ./data:/service/data
-    container_name: app-wrapper
+    container_name: pre-processor
     build:
       context: .
       dockerfile: ./Dockerfile_arm64 # change to Dockerfile on Linux

@@ -25,6 +25,8 @@ region = "${AWS_DEFAULT_REGION}"
 az = ["a", "b", "c", "d", "e", "f"]
 app_repository = "app"
 post_processor_repository = "post-processor"
+pre_processor_repository = "pre-processor"
+workflow_manager_repository = "workflow-manager"
 api_host = "${API_HOST}"
 api_host2 = "${API_HOST2}"
 pennsieve_agent_home = "/tmp"
@@ -36,8 +38,12 @@ environment = "${ENVIRONMENT}"
 app_name = "${APP_GIT_REPOSITORY}"
 app_cpu = "${APP_CPU:-2048}"
 app_memory = "${APP_MEMORY:-4096}"
+pre_processor_cpu = "${PRE_PROCESSOR_CPU:-2048}"
+pre_processor_memory = "${PRE_PROCESSOR_MEMORY:-4096}"
 post_processor_cpu = "${POST_PROCESSOR_CPU:-2048}"
 post_processor_memory = "${POST_PROCESSOR_MEMORY:-4096}"
+wm_cpu = "${WM_CPU:-2048}"
+wm_memory = "${WM_MEMORY:-4096}"
 EOL
 
 if [ $1 = "destroy" ]; then

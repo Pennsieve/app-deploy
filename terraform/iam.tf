@@ -32,6 +32,8 @@ resource "aws_iam_policy" "lambda_iam_policy" {
 
 // ## Main App ##
 // ECS task IAM role
+// TODO - this can be updated, as it does not need to invoke a lambda or run an ecs task
+// TODO - this is shared with the workflow manager and should not be
 resource "aws_iam_role" "task_role_for_ecs_task" {
   name               = "task_role_for_ecs_task-${random_uuid.val.id}"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_role_assume_role.json
@@ -159,6 +161,21 @@ resource "aws_iam_role" "task_role_for_post_processor" {
 // ECS Execution IAM role
 resource "aws_iam_role" "execution_role_for_post_processor" {
   name               = "post_iam_role-${random_uuid.val.id}"
+  assume_role_policy = data.aws_iam_policy_document.ecs_execution_role_assume_role.json
+  managed_policy_arns = [aws_iam_policy.ecs_execution_role_policy.arn]
+}
+
+// ## Pre Processor ##
+// ECS Pre processor task IAM role
+resource "aws_iam_role" "task_role_for_pre_processor" {
+  name               = "pre_task_role-${random_uuid.val.id}"
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_role_assume_role.json
+  managed_policy_arns = [aws_iam_policy.efs_policy.arn]
+}
+
+// ECS Execution IAM role
+resource "aws_iam_role" "execution_role_for_pre_processor" {
+  name               = "pre_iam_role-${random_uuid.val.id}"
   assume_role_policy = data.aws_iam_policy_document.ecs_execution_role_assume_role.json
   managed_policy_arns = [aws_iam_policy.ecs_execution_role_policy.arn]
 }

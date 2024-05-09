@@ -7,7 +7,13 @@ variable "az" {
 variable "app_repository" {
     type = string
 }
+variable "pre_processor_repository" {
+    type = string
+}
 variable "post_processor_repository" {
+    type = string
+}
+variable "workflow_manager_repository" {
     type = string
 }
 variable "api_host" {
@@ -38,9 +44,21 @@ variable "app_cpu" {
 variable "app_memory" {
     type = number
 }
+variable "pre_processor_cpu" {
+    type = number
+}
+variable "pre_processor_memory" {
+    type = number
+}
 variable "post_processor_cpu" {
     type = number
 }
 variable "post_processor_memory" {
+    type = number
+}
+variable "wm_cpu" {
+    type = number
+}
+variable "wm_memory" {
     type = number
 }

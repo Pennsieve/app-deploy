@@ -12,16 +12,20 @@ ecs_client = boto3_client("ecs", region_name=os.environ['REGION'])
 def lambda_handler(event, context):
     cluster_name = os.environ['CLUSTER_NAME']
     task_definition_name = os.environ['TASK_DEFINITION_NAME']
+    task_definition_name_wm = os.environ['TASK_DEFINITION_NAME_WM']
     container_name = os.environ['CONTAINER_NAME']
     security_group = os.environ['SECURITY_GROUP_ID']
     subnet_ids = os.environ['SUBNET_IDS']
+    task_definition_name_pre = os.environ['TASK_DEFINITION_NAME_PRE']
     task_definition_name_post = os.environ['TASK_DEFINITION_NAME_POST']
+    container_name_pre = os.environ['CONTAINER_NAME_PRE']
     container_name_post = os.environ['CONTAINER_NAME_POST']
     pennsieve_host = os.environ['PENNSIEVE_API_HOST']
     pennsieve_host2 = os.environ['PENNSIEVE_API_HOST2']
-    pennieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
+    pennsieve_agent_home = os.environ['PENNSIEVE_AGENT_HOME']
     pennsieve_upload_bucket = os.environ['PENNSIEVE_UPLOAD_BUCKET']
     environment = os.environ['ENVIRONMENT']
+    workflow_manager_name = os.environ['CONTAINER_NAME_WM']
 
     # gets api key secrets
     secret_name = os.environ['API_KEY_SM_NAME']
@@ -85,7 +89,7 @@ def lambda_handler(event, context):
         response = ecs_client.run_task(
             cluster = cluster_name,
             launchType = 'FARGATE',
-            taskDefinition=task_definition_name,
+            taskDefinition=task_definition_name_wm,
             count = 1,
             platformVersion='LATEST',
             networkConfiguration={
@@ -98,7 +102,7 @@ def lambda_handler(event, context):
             overrides={
 	        'containerOverrides': [
 		        {
-		            'name': container_name,
+		            'name': workflow_manager_name,
 			        'environment': [
 				        {
 					        'name': 'INTEGRATION_ID',
@@ -108,6 +112,22 @@ def lambda_handler(event, context):
 					        'name': 'BASE_DIR',
 					        'value': '/mnt/efs'
 				        },
+                        {
+					        'name': 'TASK_DEFINITION_NAME_PRE',
+					        'value': task_definition_name_pre
+				        },
+                        {
+					        'name': 'CONTAINER_NAME_PRE',
+					        'value': container_name_pre
+				        }, 
+                        {
+					        'name': 'TASK_DEFINITION_NAME',
+					        'value': task_definition_name
+				        },
+                        {
+					        'name': 'CONTAINER_NAME',
+					        'value': container_name
+				        }, 
                         {
 					        'name': 'TASK_DEFINITION_NAME_POST',
 					        'value': task_definition_name_post
@@ -134,7 +154,7 @@ def lambda_handler(event, context):
 				        },
                         {
 					        'name': 'PENNSIEVE_AGENT_HOME',
-					        'value': pennieve_agent_home
+					        'value': pennsieve_agent_home
 				        },
                         {
 					        'name': 'PENNSIEVE_UPLOAD_BUCKET',
@@ -159,7 +179,11 @@ def lambda_handler(event, context):
                         {
 					        'name': 'ENVIRONMENT',
 					        'value': environment
-				        },                   
+				        },
+                        {
+					        'name': 'REGION',
+					        'value': region_name
+				        },               
                         
 			     ],
 		        },
